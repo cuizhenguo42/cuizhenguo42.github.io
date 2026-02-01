@@ -1,0 +1,1040 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵龟八法+子午流注 标准开穴计算器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Microsoft YaHei", 微软雅黑, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .result-area {
+            min-height: 100px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            line-height: 1.8;
+        }
+        .table-area {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        .btn-group-vertical > .btn {
+            margin-bottom: 5px;
+        }
+        .text-red {
+            color: #dc3545;
+        }
+        .text-blue {
+            color: #0d6efd;
+        }
+        .text-purple {
+            color: #6f42c1;
+        }
+        .text-orange {
+            color: #fd7e14;
+        }
+        .fw-bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="text-purple fw-bold">灵龟八法 + 子午流注 标准开穴计算器</h2>
+                <p class="text-muted">基于传统针灸时间疗法规则 | 自动计算真太阳时 | 支持全天12时辰批量开穴 | 作者：蓝天白云</p>
+            </div>
+        </div>
+
+        <!-- 基础参数输入区 -->
+        <div class="card">
+            <div class="card-header bg-primary text-white">基础参数设置</div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">自定义时间</label>
+                        <input type="datetime-local" id="customDatetime" class="form-control" step="60">
+                        <div class="form-text">用于自定义时间开穴计算，当前时间可直接点对应按钮</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">性别（灵龟八法专用）</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="male" checked value="男">
+                                <label class="form-check-label" for="male">男</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="女">
+                                <label class="form-check-label" for="female">女</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">当地经度（°E）</label>
+                        <input type="number" id="longitude" class="form-control" value="120.0" min="73" max="135" step="0.1">
+                        <div class="form-text">中国经度范围：73°E - 135°E</div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">全天计算日期</label>
+                        <input type="date" id="batchDate" class="form-control" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能按钮区 -->
+        <div class="row g-3">
+            <!-- 灵龟八法按钮 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-purple text-white" style="background-color: #6f42c1 !important;">灵龟八法 功能按钮</div>
+                    <div class="card-body d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-purple btn-sm" style="border-color: #6f42c1; color: #6f42c1;" onclick="calcLingGuiCurrent()">当前时间开穴</button>
+                        <button class="btn btn-outline-purple btn-sm" style="border-color: #6f42c1; color: #6f42c1;" onclick="calcLingGuiCustom()">自定义时间开穴</button>
+                        <button class="btn btn-outline-purple btn-sm" style="border-color: #6f42c1; color: #6f42c1;" onclick="calcLingGuiBatch()">全天12时辰批量开穴</button>
+                        <button class="btn btn-danger btn-sm" onclick="clearLingGuiResult()">清空结果</button>
+                    </div>
+                </div>
+            </div>
+            <!-- 子午流注按钮 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-orange text-white" style="background-color: #fd7e14 !important;">子午流注 功能按钮</div>
+                    <div class="card-body d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-orange btn-sm" style="border-color: #fd7e14; color: #fd7e14;" onclick="calcZWLCCurrent()">当前时间开穴</button>
+                        <button class="btn btn-outline-orange btn-sm" style="border-color: #fd7e14; color: #fd7e14;" onclick="calcZWLCCustom()">自定义时间开穴</button>
+                        <button class="btn btn-outline-orange btn-sm" style="border-color: #fd7e14; color: #fd7e14;" onclick="calcZWLCBatch()">全天12时辰批量开穴</button>
+                        <button class="btn btn-danger btn-sm" onclick="clearZWLCResult()">清空结果</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结果展示区 -->
+        <div class="row g-3">
+            <!-- 灵龟八法结果 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-purple text-white" style="background-color: #6f42c1 !important;">灵龟八法 开穴结果</div>
+                    <div class="card-body">
+                        <div id="lingguiResult" class="result-area">请点击上方功能按钮进行计算...</div>
+                    </div>
+                </div>
+            </div>
+            <!-- 子午流注结果 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-orange text-white" style="background-color: #fd7e14 !important;">子午流注 开穴结果（纳甲+纳子法）</div>
+                    <div class="card-body">
+                        <div id="zwlcResult" class="result-area">请点击上方功能按钮进行计算...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 全天批量表格结果区 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">全天12时辰批量开穴表格</div>
+                    <div class="card-body">
+                        <div id="batchTableResult" class="table-area">批量计算结果将显示在此处...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ===================== 全局常量定义（完全对应VBA原版）=====================
+        const STANDARD_TIAN_GAN = "甲乙丙丁戊己庚辛壬癸";
+        const STANDARD_DI_ZHI = "子丑寅卯辰巳午未申酉戌亥";
+
+        // 灵龟八法常量
+        const YANG_RI_GAN = ["甲", "丙", "戊", "庚", "壬"];
+        const YIN_RI_GAN = ["乙", "丁", "己", "辛", "癸"];
+        const SHI_CHEN_FULL_CONFIG = [
+            ["子时", 23, 1, 23, 30], ["丑时", 1, 3, 2, 0],
+            ["寅时", 3, 5, 4, 0], ["卯时", 5, 7, 6, 0],
+            ["辰时", 7, 9, 8, 0], ["巳时", 9, 11, 10, 0],
+            ["午时", 11, 13, 12, 0], ["未时", 13, 15, 14, 0],
+            ["申时", 15, 17, 16, 0], ["酉时", 17, 19, 18, 0],
+            ["戌时", 19, 21, 20, 0], ["亥时", 21, 23, 22, 0]
+        ];
+        const RI_GAN_ZHI_NUM = {
+            10: { "甲": true, "己": true, "辰": true, "丑": true, "戌": true, "未": true },
+            9: { "乙": true, "庚": true, "申": true, "酉": true },
+            8: { "丁": true, "壬": true, "寅": true, "卯": true },
+            7: { "戊": true, "癸": true, "丙": true, "辛": true, "巳": true, "午": true, "亥": true, "子": true }
+        };
+        const SHI_GAN_ZHI_NUM = {
+            9: { "甲": true, "己": true, "子": true, "午": true },
+            8: { "乙": true, "庚": true, "丑": true, "未": true },
+            7: { "丙": true, "辛": true, "寅": true, "申": true },
+            6: { "丁": true, "壬": true, "卯": true, "酉": true },
+            5: { "戊": true, "癸": true, "辰": true, "戌": true },
+            4: { "巳": true, "亥": true }
+        };
+        const NUM_TO_POINT = {
+            1: ["申脉", "通阳跷脉", "后溪"], 2: ["照海", "通阴跷脉", "列缺"],
+            3: ["外关", "通阳维脉", "足临泣"], 4: ["足临泣", "通带脉", "外关"],
+            5: ["照海", "通阴跷脉", "列缺"], 6: ["公孙", "通冲脉", "内关"],
+            7: ["后溪", "通督脉", "申脉"], 8: ["内关", "通阴维脉", "公孙"],
+            9: ["列缺", "通任脉", "照海"]
+        };
+        const JIAO_JING_PAIR = {
+            "公孙": "内关", "内关": "公孙", "照海": "列缺", "列缺": "照海",
+            "外关": "足临泣", "足临泣": "外关", "后溪": "申脉", "申脉": "后溪"
+        };
+        const GUEST_CHANNEL_DICT = {
+            "后溪": "通督脉", "列缺": "通任脉", "外关": "通阳维脉", "公孙": "通冲脉",
+            "申脉": "通阳跷脉", "足临泣": "通带脉", "内关": "通阴维脉", "照海": "通阴跷脉"
+        };
+        const POINT_DETAIL_ENHANCED = {
+            "公孙": [
+                "足太阴脾经",
+                "足内侧第1跖骨基底前下方，赤白肉际处",
+                "【主冶】胃痛（寒痛/虚痛/气滞痛）、胃胀、嗳气、反酸、呕吐、腹胀、腹泻、痢疾、便秘；月经不调、痛经、崩漏、带下；心悸、胸闷、失眠、焦虑、晕车晕船",
+                "【次治】疝气、脚气、水肿、黄疸、食欲不振、小儿疳积",
+                "【病机】脾失健运、气血瘀滞、冲脉失调、胃失和降",
+                "【配伍建议】配内关治冠心病/胃痛；配足三里治脾虚腹泻；配太冲治痛经"
+            ],
+            "内关": [
+                "手厥阴心包经",
+                "腕横纹上2寸，掌长肌腱与桡侧腕屈肌腱之间",
+                "【主冶】心痛、胸闷、心悸、心律失常、冠心病、心绞痛；失眠、多梦、健忘、焦虑、抑郁、癫狂；胃痛、呕吐、呃逆、晕车；中风、偏瘫、失语、手臂麻木",
+                "【次治】偏头痛、眩晕、热病、中暑、产后血晕",
+                "【病机】心包经气郁滞、心脉痹阻、胃气上逆、心神不宁",
+                "【配伍建议】配公孙治胃食管反流；配神门治失眠；配膻中治胸闷"
+            ],
+            "照海": [
+                "足少阴肾经",
+                "内踝尖下1寸，内踝下缘边际凹陷中",
+                "【主冶】咽喉肿痛、咽干、失音、梅核气；失眠、多梦、嗜睡、癫痫、癔症；月经不调、痛经、闭经、阴痒、带下、疝气；小便频数、癃闭、水肿",
+                "【次治】便秘、泄泻、脚气、下肢痿痹、足跟痛",
+                "【病机】肾阴不足、虚火上炎、阴跷脉失养、下焦湿热",
+                "【配伍建议】配列缺治咽喉肿痛；配神门治失眠；配三阴交治月经不调"
+            ],
+            "列缺": [
+                "手太阴肺经",
+                "腕横纹上1.5寸，桡骨茎突上方，肱桡肌与拇长展肌腱之间",
+                "【主冶】咳嗽（风寒/风热/阴虚）、气喘、咯血、咽喉肿痛；头痛（偏头痛/后头痛）、项强、落枕、颈椎病；面瘫、面痛、牙痛、鼻出血",
+                "【次治】手腕痛、手指麻木、小便失禁、遗尿",
+                "【病机】肺失宣降、经络阻滞、任脉失调",
+                "【配伍建议】配照海治咽炎；配风池治头痛；配合谷治牙痛"
+            ],
+            "外关": [
+                "手少阳三焦经",
+                "腕背横纹上2寸，尺骨与桡骨间隙中点",
+                "【主冶】偏头痛、眩晕、耳鸣、耳聋、中耳炎；咽喉肿痛、颊肿、目赤肿痛；肩背痛、肘臂屈伸不利、手指麻木；感冒、发热、外感热病",
+                "【次治】胁痛、腹胀、便秘、瘰疬、腮腺炎",
+                "【病机】三焦经气不畅、风热外袭、经络痹阻",
+                "【配伍建议】配足临泣治偏头痛；配曲池治发热；配肩髃治肩痛"
+            ],
+            "足临泣": [
+                "足少阳胆经",
+                "足背第4、5跖骨底结合部前方，第5趾长伸肌腱外侧凹陷中",
+                "【主冶】偏头痛、胁肋痛、乳痛、月经不调、痛经；目赤肿痛、视物昏花、耳鸣、耳聋；足背肿痛、下肢痿痹、脚气；瘰疬、疟疾",
+                "【次治】失眠、多梦、烦躁、口苦、黄疸",
+                "【病机】胆经郁热、带脉失调、经络不通",
+                "【配伍建议】配外关治偏头痛；配太冲治胁痛；配乳根治乳痛"
+            ],
+            "后溪": [
+                "手太阳小肠经",
+                "第5掌指关节尺侧近端，掌横纹头赤白肉际处",
+                "【主冶】颈项强痛、颈椎病、落枕、肩背痛；腰腿痛、急性腰扭伤、坐骨神经痛；失眠、多梦、癫痫、癔症；手指麻木、屈伸不利、腕痛",
+                "【次治】目赤肿痛、耳鸣、耳聋、鼻出血、疟疾",
+                "【病机】督脉不通、小肠经气阻滞、筋脉失养",
+                "【配伍建议】配申脉治颈腰痛；配神门治失眠；配委中治腰扭伤"
+            ],
+            "申脉": [
+                "足太阳膀胱经",
+                "外踝尖下1寸，外踝下缘边际凹陷中",
+                "【主冶】失眠（不寐/易醒）、嗜睡、癫痫、眩晕；头痛（后头痛/偏头痛）、项强、落枕；腰腿痛、下肢痿痹、足跟痛、脚气；小便不利、癃闭",
+                "【次治】呕吐、泄泻、腹胀、发热、感冒",
+                "【病机】阳跷脉失养、膀胱经气不畅、髓海不足",
+                "【配伍建议】配后溪治颈腰痛；配百会治眩晕；配涌泉治失眠"
+            ]
+        };
+        const POINT_COMBINATION_TREATMENT = {
+            "公孙-内关": "【冠心病】心悸、胸闷、胸痛、气短；【脾胃病】胃痛（寒/热/虚/实）、胃胀、反酸、呕吐、腹泻；【妇科病】月经不调、痛经、崩漏、更年期综合征；【神志病】焦虑、抑郁、失眠、晕车晕船",
+            "照海-列缺": "【呼吸道病】感冒、咳嗽（风寒/风热）、咽喉肿痛、咽干失音、梅核气；【神志病】失眠、多梦、癫痫、癔症；【下焦病】月经不调、阴痒、小便频数",
+            "外关-足临泣": "【头面病】偏头痛、眩晕、耳鸣、耳聋、目赤肿痛；【经络病】胁痛、肩背痛、肘臂痛、足背肿痛；【杂病】瘰疬、疟疾、口苦、烦躁",
+            "后溪-申脉": "【颈肩腰病】颈椎病、落枕、肩背痛、急性腰扭伤、坐骨神经痛、足跟痛；【神志病】失眠、多梦、癫痫、癔症；【五官病】目赤肿痛、耳鸣、鼻出血"
+        };
+
+        // 子午流注常量（核心修正：键名+规则完全对应VBA）
+        const ZWLC_RI_GAN_RULE = {
+            "甲": ["胆经", "窍阴(井金)", "戌时", "阳日", "三焦经", "液门(荥水)", "他生我（水生木）"],
+            "丙": ["小肠经", "少泽(井金)", "申时", "阳日", "三焦经", "中渚(输木)", "他生我（木生火）"],
+            "戊": ["胃经", "厉兑(井金)", "午时", "阳日", "三焦经", "支沟(经火)", "他生我（火生土）"],
+            "庚": ["大肠经", "商阳(井金)", "辰时", "阳日", "三焦经", "天井(合土)", "他生我（土生金）"],
+            "壬": ["膀胱经", "至阴(井金)", "寅时", "阳日", "三焦经", "关冲(井金)", "他生我（金生水）"],
+            "乙": ["肝经", "大敦(井木)", "酉时", "阴日", "心包经", "劳宫(荥火)", "我生他（木生火）"],
+            "丁": ["心经", "少冲(井木)", "未时", "阴日", "心包经", "大陵(输土)", "我生他（火生土）"],
+            "己": ["脾经", "隐白(井木)", "巳时", "阴日", "心包经", "间使(经金)", "我生他（土生金）"],
+            "辛": ["肺经", "少商(井木)", "卯时", "阴日", "心包经", "曲泽(合水)", "我生他（金生水）"],
+            "癸": ["肾经", "涌泉(井木)", "亥时", "阴日", "心包经", "中冲(井木)", "我生他（水生木）"]
+        };
+        const ZWLC_SHICHEN_JINGMAI = {
+            "子时": "胆经", "丑时": "肝经", "寅时": "肺经", "卯时": "大肠经",
+            "辰时": "胃经", "巳时": "脾经", "午时": "心经", "未时": "小肠经",
+            "申时": "膀胱经", "酉时": "肾经", "戌时": "心包经", "亥时": "三焦经"
+        };
+        const ZWLC_JINGMAI_WUXING = {
+            "肺经": "金", "大肠经": "金", "胃经": "土", "脾经": "土",
+            "心经": "火", "小肠经": "火", "膀胱经": "水", "肾经": "水",
+            "心包经": "火", "三焦经": "火", "胆经": "木", "肝经": "木"
+        };
+        const ZWLC_JINGMAI_XUEWEI = {
+            "肺经": ["太渊(母)", "尺泽(子)", "太渊(原)", "【母穴治证】肺气虚（咳嗽无力、气短懒言、自汗、易感冒）、肺阴虚（干咳少痰、咽干、盗汗）、心悸、脉结代、手腕痛", "【子穴治证】肺热（咳嗽黄痰、咽喉肿痛、胸痛、咯血）、胃热、肘臂痛、小儿惊风、吐泻"],
+            "大肠经": ["曲池(母)", "二间(子)", "合谷(原)", "【母穴治证】大肠气虚（便秘、腹泻、腹痛喜按）、上肢痿痹、湿疹、荨麻疹、发热、高血压", "【子穴治证】大肠实热（便秘、腹痛拒按、牙痛、咽喉肿痛、目赤）、口干、手指麻木"],
+            "胃经": ["解溪(母)", "厉兑(子)", "冲阳(原)", "【母穴治证】胃气虚（胃痛喜按、纳差、嗳气、腹胀）、下肢痿痹、足背肿痛、头痛、眩晕", "【子穴治证】胃实热（胃痛拒按、口臭、便秘、牙痛、鼻衄）、多梦、癫狂、足背肿痛"],
+            "脾经": ["大都(母)", "商丘(子)", "太白(原)", "【母穴治证】脾气虚（腹胀、便溏、食欲不振、乏力、水肿）、小儿疳积、足趾痛", "【子穴治证】脾经实热（便秘、黄疸、腹胀拒按、咽喉肿痛、足内踝痛）、疟疾"],
+            "心经": ["少冲(母)", "神门(子)", "神门(原)", "【母穴治证】心气虚（心悸、气短、失眠、多梦、健忘）、舌强不语、手指麻木、热病", "【子穴治证】心实热（心烦、失眠、口舌生疮、癫狂、胸痛、掌中热）"],
+            "小肠经": ["后溪(母)", "小海(子)", "腕骨(原)", "【母穴治证】小肠虚寒（腹痛、腹泻、肠鸣、遗尿、颈肩痛）、失眠、癫痫、手指麻木", "【子穴治证】小肠实热（咽痛、耳聋、耳鸣、肘臂痛、癫痫、颊肿）"],
+            "膀胱经": ["至阴(母)", "束骨(子)", "京骨(原)", "【母穴治证】膀胱虚寒（尿频、尿急、遗尿、腰痛喜按、头痛）、胎位不正、难产", "【子穴治证】膀胱实热（尿痛、尿急、血尿、腰痛拒按、头痛、项强）、癫痫、足趾痛"],
+            "肾经": ["复溜(母)", "涌泉(子)", "太溪(原)", "【母穴治证】肾阴虚（腰酸、耳鸣、盗汗、便秘、水肿）、月经不调、下肢痿痹、足跟痛", "【子穴治证】肾实热（咽痛、口舌生疮、心烦、失眠、小便不利、小儿惊风）"],
+            "心包经": ["中冲(母)", "大陵(子)", "大陵(原)", "【母穴治证】心包气虚（胸闷、心悸、气短、失眠、多梦）、中风、中暑、舌强不语", "【子穴治证】心包实热（心烦、癫狂、口臭、胸痛、腕痛、掌中热）"],
+            "三焦经": ["关冲(母)", "天井(子)", "阳池(原)", "【母穴治证】三焦虚寒（腹胀、水肿、小便不利、耳鸣、耳聋）、头痛、目赤、手指麻木", "【子穴治证】三焦实热（胁痛、耳鸣、耳聋、瘰疬、肘臂痛、癫痫）"],
+            "胆经": ["侠溪(母)", "阳辅(子)", "丘墟(原)", "【母穴治证】胆气虚（胁痛喜按、头晕、口苦、失眠、易惊）、耳鸣、耳聋、足背肿痛", "【子穴治证】胆实热（偏头痛、胁痛拒按、口苦、黄疸、癫痫、下肢痿痹）"],
+            "肝经": ["曲泉(母)", "行间(子)", "太冲(原)", "【母穴治证】肝阴虚（胁痛、头晕、目眩、月经不调、膝痛）、小便不利、疝气", "【子穴治证】肝实热（头痛、目赤、口苦、胁痛、痛经、小儿惊风、癫痫）"]
+        };
+        const ZWLC_XUEWEI_DETAIL = {
+            // 甲日
+            "甲日戌时": ["窍阴", "胆经", "井穴(金)", "【主冶】偏头痛、目赤肿痛、耳鸣耳聋、咽喉肿痛、足跗肿痛、热病、昏迷", "无原穴（井穴阶段）"],
+            "甲日子时": ["前谷", "小肠经", "荥穴(水)", "【主冶】头痛、目痛、耳鸣、咽喉肿痛、乳少、热病、手指麻木、肘臂挛痛", "无原穴（荥穴阶段）"],
+            "甲日寅时": ["陷谷", "胃经", "输穴(木)", "【主冶】面肿、目赤肿痛、肠鸣、腹痛、热病、足背肿痛", "返本还原：丘墟（胆经原穴）"],
+            "甲日辰时": ["阳溪", "大肠经", "经穴(火)", "【主冶】头痛、目赤肿痛、耳聋、耳鸣、齿痛、咽喉肿痛、腕痛、臂痛", "无原穴（经穴阶段）"],
+            "甲日午时": ["委中", "膀胱经", "合穴(土)", "【主冶】腰背痛、急性腰扭伤、坐骨神经痛、下肢痿痹、小便不利、腹痛、吐泻", "无原穴（合穴阶段）"],
+            "甲日申时": ["液门", "三焦经", "荥穴(水)", "【主冶】头痛、目赤肿痛、耳鸣、耳聋、咽喉肿痛、手臂痛、手指麻木、热病", "气纳三焦（他生我：水生木）"],
+            // 乙日
+            "乙日酉时": ["大敦", "肝经", "井穴(木)", "【主冶】疝气、少腹痛、遗尿、癃闭、月经不调、崩漏、阴挺、癫痫、善寐", "无原穴（井穴阶段）"],
+            "乙日亥时": ["少府", "心经", "荥穴(火)", "【主冶】心悸、胸痛、小便不利、遗尿、阴痒、小指挛痛、掌中热", "无原穴（荥穴阶段）"],
+            "乙日丑时": ["太白", "脾经", "输穴(土)", "【主冶】胃痛、腹胀、肠鸣、泄泻、便秘、痢疾、体重节痛、脚气", "返本还原：太冲（肝经输穴代原）"],
+            "乙日卯时": ["经渠", "肺经", "经穴(金)", "【主冶】咳嗽、气喘、咯血、咽喉肿痛、腕痛、掌中热", "无原穴（经穴阶段）"],
+            "乙日巳时": ["阴谷", "肾经", "合穴(水)", "【主冶】阳痿、遗精、月经不调、崩漏、小便不利、膝痛、癫狂", "无原穴（合穴阶段）"],
+            "乙日未时": ["劳宫", "心包经", "荥穴(火)", "【主冶】心痛、心悸、癫狂、痫证、口疮、口臭、掌中热、呕吐、中风", "血归包络（我生他：木生火）"],
+            // 丙日
+            "丙日申时": ["少泽", "小肠经", "井穴(金)", "【主冶】头痛、目翳、咽喉肿痛、乳痈、乳汁少、昏迷、热病、手指麻木", "无原穴（井穴阶段）"],
+            "丙日戌时": ["内庭", "胃经", "荥穴(水)", "【主冶】齿痛、咽喉肿痛、口歪、鼻衄、腹胀、泄泻、痢疾、热病、足背肿痛", "无原穴（荥穴阶段）"],
+            "丙日子时": ["三间", "大肠经", "输穴(木)", "【主冶】齿痛、咽喉肿痛、目痛、腹胀、肠鸣、泄泻、手背肿痛", "返本还原：腕骨（小肠经原穴）"],
+            "丙日寅时": ["昆仑", "膀胱经", "经穴(火)", "【主冶】头痛、项强、眩晕、癫痫、中风偏瘫、腰背痛、足跟痛、下肢痿痹", "无原穴（经穴阶段）"],
+            "丙日辰时": ["阳陵泉", "胆经", "合穴(土)", "【主冶】胁痛、口苦、呕吐、黄疸、下肢痿痹、脚气、小儿惊风、肩痛", "无原穴（合穴阶段）"],
+            "丙日午时": ["中渚", "三焦经", "输穴(木)", "【主冶】头痛、目赤肿痛、耳鸣、耳聋、咽喉肿痛、肩背肘臂酸痛、手指屈伸不利", "气纳三焦（他生我：木生火）"],
+            // 丁日
+            "丁日未时": ["少冲", "心经", "井穴(木)", "【主冶】心悸、心痛、胸胁痛、癫狂、热病、昏迷、小儿惊风", "无原穴（井穴阶段）"],
+            "丁日酉时": ["大都", "脾经", "荥穴(火)", "【主冶】腹胀、胃痛、呕吐、泄泻、便秘、热病无汗、体重肢肿、足跗肿痛", "无原穴（荥穴阶段）"],
+            "丁日亥时": ["太渊", "肺经", "输穴(土)", "【主冶】咳嗽、气喘、咯血、胸痛、咽喉肿痛、腕臂痛、无脉症", "返本还原：神门（心经输穴代原）"],
+            "丁日丑时": ["复溜", "肾经", "经穴(金)", "【主冶】水肿、腹胀、泄泻、盗汗、热病汗不出、下肢痿痹、腰脊强痛", "无原穴（经穴阶段）"],
+            "丁日卯时": ["曲泉", "肝经", "合穴(水)", "【主冶】月经不调、痛经、带下、阴挺、阴痒、产后腹痛、遗精、阳痿、疝气、小便不利", "无原穴（合穴阶段）"],
+            "丁日巳时": ["大陵", "心包经", "输穴(土)", "【主冶】心痛、心悸、胃痛、呕吐、癫狂、痫证、胸胁胀痛、腕关节疼痛", "血归包络（我生他：火生土）"],
+            // 戊日
+            "戊日午时": ["厉兑", "胃经", "井穴(金)", "【主冶】鼻衄、齿痛、咽喉肿痛、腹胀、热病、多梦、癫狂", "无原穴（井穴阶段）"],
+            "戊日申时": ["二间", "大肠经", "荥穴(水)", "【主冶】目赤肿痛、鼻衄、齿痛、咽喉肿痛、口歪、热病、手背肿痛", "无原穴（荥穴阶段）"],
+            "戊日戌时": ["束骨", "膀胱经", "输穴(木)", "【主冶】头痛、项强、腰腿痛、急性腰扭伤、坐骨神经痛、目赤肿痛、癫痫", "返本还原：冲阳（胃经原穴）"],
+            "戊日子时": ["阳辅", "胆经", "经穴(火)", "【主冶】偏头痛、目外眦痛、缺盆中痛、腋下痛、瘰疬、胸胁胀痛、下肢痿痹、脚气", "无原穴（经穴阶段）"],
+            "戊日寅时": ["小海", "小肠经", "合穴(土)", "【主冶】肘臂疼痛、麻木、癫痫", "无原穴（合穴阶段）"],
+            "戊日辰时": ["支沟", "三焦经", "经穴(火)", "【主冶】胁肋痛、便秘、耳鸣、耳聋、暴喑、瘰疬、热病、肩臂痛", "气纳三焦（他生我：火生土）"],
+            // 己日
+            "己日巳时": ["隐白", "脾经", "井穴(木)", "【主冶】月经过多、崩漏、便血、尿血、癫狂、多梦、惊风、腹胀", "无原穴（井穴阶段）"],
+            "己日未时": ["鱼际", "肺经", "荥穴(火)", "【主冶】咳嗽、咯血、咽喉肿痛、失音、发热、掌中热", "无原穴（荥穴阶段）"],
+            "己日酉时": ["太溪", "肾经", "输穴(土)", "【主冶】头痛、眩晕、耳鸣、耳聋、失眠、健忘、遗精、阳痿、月经不调、腰痛", "返本还原：太白（脾经输穴代原）"],
+            "己日亥时": ["中封", "肝经", "经穴(金)", "【主冶】疝气、少腹痛、遗精、小便不利、腰痛、足冷、内踝肿痛", "无原穴（经穴阶段）"],
+            "己日丑时": ["少海", "心经", "合穴(水)", "【主冶】心痛、肘臂挛痛、麻木、癫痫、瘰疬", "无原穴（合穴阶段）"],
+            "己日卯时": ["间使", "心包经", "经穴(金)", "【主冶】心痛、心悸、胃痛、呕吐、热病、疟疾、癫狂、肘臂挛痛", "血归包络（我生他：土生金）"],
+            // 庚日
+            "庚日辰时": ["商阳", "大肠经", "井穴(金)", "【主冶】齿痛、咽喉肿痛、目赤、耳聋、热病、昏迷、手指麻木", "无原穴（井穴阶段）"],
+            "庚日午时": ["通谷", "膀胱经", "荥穴(水)", "【主冶】头痛、目眩、腰腿痛、下肢痿痹、小便不利、癃闭、水肿、疟疾", "无原穴（荥穴阶段）"],
+            "庚日申时": ["足临泣", "胆经", "输穴(木)", "【主冶】偏头痛、胁肋痛、乳痛、月经不调、目赤肿痛、足背肿痛、下肢痿痹、瘰疬", "返本还原：合谷（大肠经原穴）"],
+            "庚日戌时": ["阳谷", "小肠经", "经穴(火)", "【主冶】头痛、目眩、耳鸣、耳聋、咽喉肿痛、热病、癫狂、腕痛、臂痛", "无原穴（经穴阶段）"],
+            "庚日子时": ["足三里", "胃经", "合穴(土)", "【主冶】胃痛、呕吐、噎膈、腹胀、泄泻、便秘、痢疾、乳痈、下肢痿痹、癫狂", "无原穴（合穴阶段）"],
+            "庚日寅时": ["天井", "三焦经", "合穴(土)", "【主冶】偏头痛、胁肋痛、颈项肩臂痛、瘰疬、癫痫", "气纳三焦（他生我：土生金）"],
+            // 辛日
+            "辛日卯时": ["少商", "肺经", "井穴(木)", "【主冶】咽喉肿痛、咳嗽、气喘、咯血、鼻衄、热病、昏迷、癫狂", "无原穴（井穴阶段）"],
+            "辛日巳时": ["然谷", "肾经", "荥穴(火)", "【主冶】月经不调、带下、阴痒、遗精、阳痿、小便不利、泄泻、消渴、足跗肿痛", "无原穴（荥穴阶段）"],
+            "辛日未时": ["太冲", "肝经", "输穴(土)", "【主冶】头痛、眩晕、目赤肿痛、口苦、胁痛、疝气、崩漏、月经不调、癫痫、小儿惊风", "返本还原：太渊（肺经输穴代原）"],
+            "辛日酉时": ["灵道", "心经", "经穴(金)", "【主冶】心痛、暴喑、肘臂挛痛、手指麻木、失眠", "无原穴（经穴阶段）"],
+            "辛日亥时": ["阴陵泉", "脾经", "合穴(水)", "【主冶】腹胀、泄泻、水肿、黄疸、小便不利、遗尿、痛经、阴痒、膝痛", "无原穴（合穴阶段）"],
+            "辛日丑时": ["曲泽", "心包经", "合穴(水)", "【主冶】心痛、心悸、胃痛、呕吐、泄泻、热病、肘臂挛痛", "血归包络（我生他：金生水）"],
+            // 壬日
+            "壬日寅时": ["至阴", "膀胱经", "井穴(金)", "【主冶】头痛、目痛、鼻塞、鼻衄、胎位不正、难产、胞衣不下、足跗肿痛", "无原穴（井穴阶段）"],
+            "壬日辰时": ["侠溪", "胆经", "荥穴(水)", "【主冶】头痛、眩晕、耳鸣耳聋、目赤肿痛、胁肋疼痛、膝股痛、足跗肿痛、疟疾、热病", "无原穴（荥穴阶段）"],
+            "壬日午时": ["后溪", "小肠经", "输穴(木)", "【主冶】头项强痛、腰背痛、手指及肘臂挛痛、耳聋、目赤、癫狂痫、疟疾", "返本还原：京骨（膀胱经原穴）"],
+            "壬日申时": ["解溪", "胃经", "经穴(火)", "【主冶】头痛、眩晕、癫狂、腹胀、便秘、下肢痿痹、足踝肿痛", "无原穴（经穴阶段）"],
+            "壬日戌时": ["曲池", "大肠经", "合穴(土)", "【主冶】手臂肿痛、上肢不遂、热病、高血压、癫狂、腹痛、吐泻、痢疾、瘾疹", "无原穴（合穴阶段）"],
+            "壬日子时": ["关冲", "三焦经", "井穴(金)", "【主冶】头痛、目赤、耳鸣、耳聋、喉痹、舌强、热病、中暑", "气纳三焦（他生我：金生水）"],
+            // 癸日
+            "癸日亥时": ["涌泉", "肾经", "井穴(木)", "【主冶】头痛、头晕、目眩、失眠、昏厥、癫狂、小儿惊风、小便不利、便秘", "无原穴（井穴阶段，特殊起时）"],
+            "癸日丑时": ["行间", "肝经", "荥穴(火)", "【主冶】头痛、目赤肿痛、青盲、口歪、胁痛、疝气、小便不利、崩漏、癫痫、月经不调", "无原穴（荥穴阶段）"],
+            "癸日卯时": ["神门", "心经", "输穴(土)", "【主冶】心痛、心烦、惊悸、怔忡、健忘、失眠、癫狂痫、胸胁痛", "返本还原：太溪（肾经原穴）+ 大陵（心包经原穴）"],
+            "癸日巳时": ["商丘", "脾经", "经穴(金)", "【主冶】腹胀、肠鸣、泄泻、便秘、黄疸、足踝肿痛", "无原穴（经穴阶段）"],
+            "癸日未时": ["尺泽", "肺经", "合穴(水)", "【主冶】咳嗽、气喘、咯血、咽喉肿痛、肘臂挛痛、急性吐泻、中暑、小儿惊风", "无原穴（合穴阶段）"],
+            "癸日酉时": ["中冲", "心包经", "井穴(木)", "【主冶】中风昏迷、舌强不语、中暑、昏厥、小儿惊风、热病、舌下肿痛", "血归包络（我生他：水生木）"]
+        };
+
+        // 页面加载时初始化日期
+        window.onload = function() {
+            const today = new Date();
+            const localDatetime = today.toISOString().slice(0, 16);
+            document.getElementById("customDatetime").value = localDatetime;
+            const localDate = today.toISOString().slice(0, 10);
+            document.getElementById("batchDate").value = localDate;
+        };
+
+        // ===================== 核心辅助函数（通用）=====================
+        function CalculateTrueSolarTime(beijingTime, longitude) {
+            try {
+                const minutes = (longitude - 120) * 4;
+                return new Date(beijingTime.getTime() + minutes * 60 * 1000);
+            } catch (e) {
+                return beijingTime;
+            }
+        }
+
+        function GetRiGanZhi(inputDate) {
+            const baseDate = new Date(2025, 11, 20);
+            const ganIdxBase = 9;
+            const zhiIdxBase = 11;
+            const dayDiff = Math.floor((inputDate.getTime() - baseDate.getTime()) / (24 * 60 * 60 * 1000));
+            let riGanIdx = (ganIdxBase + dayDiff) % 10;
+            let riZhiIdx = (zhiIdxBase + dayDiff) % 12;
+            if (riGanIdx < 0) riGanIdx += 10;
+            if (riZhiIdx < 0) riZhiIdx += 12;
+            const riGan = STANDARD_TIAN_GAN.charAt(riGanIdx);
+            const riZhi = STANDARD_DI_ZHI.charAt(riZhiIdx);
+            return [riGan, riZhi, riGan + riZhi];
+        }
+
+        function GetShiGanZhi(riGan, trueSolarTime) {
+            let shiChenName = "未知时辰", shiZhi = "未知", shiStart = 0, shiEnd = 0;
+            let shiGan = "未知";
+            if (!riGan || !(trueSolarTime instanceof Date)) {
+                return [shiGan, shiZhi, shiGan + shiZhi, shiChenName, shiStart, shiEnd];
+            }
+            const wuShuDunMap = {
+                "甲": 0, "己": 0, "乙": 2, "庚": 2,
+                "丙": 4, "辛": 4, "丁": 6, "壬": 6,
+                "戊": 8, "癸": 8
+            };
+            const intHour = trueSolarTime.getHours();
+            const intMinute = trueSolarTime.getMinutes();
+            const totalHour = intHour + intMinute / 60;
+            for (let i = 0; i < SHI_CHEN_FULL_CONFIG.length; i++) {
+                shiChenName = SHI_CHEN_FULL_CONFIG[i][0];
+                shiStart = SHI_CHEN_FULL_CONFIG[i][1];
+                shiEnd = SHI_CHEN_FULL_CONFIG[i][2];
+                if ((shiStart <= totalHour && totalHour < shiEnd) || 
+                    (shiStart === 23 && totalHour >= 23) || (shiEnd === 1 && totalHour < 1)) {
+                    shiZhi = STANDARD_DI_ZHI.charAt(i);
+                    break;
+                }
+            }
+            if (wuShuDunMap.hasOwnProperty(riGan)) {
+                const startIdx = wuShuDunMap[riGan];
+                const zhiIndex = STANDARD_DI_ZHI.indexOf(shiZhi);
+                let shiGanIdx = (startIdx + zhiIndex) % 10;
+                if (shiGanIdx >= 0 && shiGanIdx < 10) {
+                    shiGan = STANDARD_TIAN_GAN.charAt(shiGanIdx);
+                }
+            }
+            return [shiGan, shiZhi, shiGan + shiZhi, shiChenName, shiStart, shiEnd];
+        }
+
+        function GetGanZhiNum(ganZhiChar, numMap) {
+            for (const num in numMap) {
+                if (numMap[num].hasOwnProperty(ganZhiChar)) {
+                    return parseInt(num);
+                }
+            }
+            return 0;
+        }
+
+        function GetSeasonWuXing(inputDate, jingmai) {
+            const yearInput = inputDate.getFullYear();
+            const winterSolstice = new Date(yearInput, 11, 22);
+            const summerSolstice = new Date(yearInput, 5, 22);
+            const isWinterToSummer = inputDate >= winterSolstice || inputDate <= summerSolstice;
+            if (jingmai !== "三焦经" && jingmai !== "心包经") {
+                return ZWLC_JINGMAI_WUXING[jingmai] || "";
+            } else {
+                return isWinterToSummer ? "水" : "火";
+            }
+        }
+
+        function GetZiMuXueByWuXing(jingmai, wuXing) {
+            let muXue = "未知", ziXue = "未知", yuanXue = "未知";
+            if (!ZWLC_JINGMAI_XUEWEI.hasOwnProperty(jingmai)) {
+                return { muXue, ziXue, yuanXue };
+            }
+            if (jingmai !== "三焦经" && jingmai !== "心包经") {
+                muXue = ZWLC_JINGMAI_XUEWEI[jingmai][0];
+                ziXue = ZWLC_JINGMAI_XUEWEI[jingmai][1];
+                yuanXue = ZWLC_JINGMAI_XUEWEI[jingmai][2];
+            } else {
+                yuanXue = ZWLC_JINGMAI_XUEWEI[jingmai][2];
+                if (wuXing === "水") {
+                    muXue = jingmai === "三焦经" ? "关冲(母)" : "中冲(母)";
+                    ziXue = jingmai === "三焦经" ? "天井(子)" : "大陵(子)";
+                } else {
+                    muXue = ZWLC_JINGMAI_XUEWEI[jingmai][0];
+                    ziXue = ZWLC_JINGMAI_XUEWEI[jingmai][1];
+                }
+            }
+            return { muXue, ziXue, yuanXue };
+        }
+
+        function GetShengJing(currentJingMai, riGan) {
+            const currentWuXing = ZWLC_JINGMAI_WUXING[currentJingMai] || "";
+            const shengWuXingMap = { "木": "火", "火": "土", "土": "金", "金": "水", "水": "木" };
+            const shengWuXing = shengWuXingMap[currentWuXing] || currentWuXing;
+            const isYangRi = "甲丙戊庚壬".includes(riGan);
+            const yangJing = ["胆经", "小肠经", "胃经", "大肠经", "膀胱经", "三焦经"];
+            const yinJing = ["肝经", "心经", "脾经", "肺经", "肾经", "心包经"];
+            const jingList = isYangRi ? yangJing : yinJing;
+            for (const jing of jingList) {
+                if (ZWLC_JINGMAI_WUXING[jing] === shengWuXing) {
+                    return jing;
+                }
+            }
+            return currentJingMai;
+        }
+
+        function GetShengXue(currentXueWei, currentWuXing, xueWeiType) {
+            const shengWuXingMap = { "木": "火", "火": "土", "土": "金", "金": "水", "水": "木" };
+            const shengWuXing = shengWuXingMap[currentWuXing] || currentWuXing;
+            const nextXueTypeMap = {
+                "井穴": "荥穴", "荥穴": "输穴", "输穴": "经穴",
+                "经穴": "合穴", "合穴": "井穴"
+            };
+            const nextXueType = nextXueTypeMap[xueWeiType] || xueWeiType;
+            const jingmai = GetXueWeiJingMai(currentXueWei);
+            if (!jingmai) return "无";
+            for (const key in ZWLC_XUEWEI_DETAIL) {
+                const xueInfo = ZWLC_XUEWEI_DETAIL[key];
+                if (xueInfo && Array.isArray(xueInfo) && xueInfo.length >= 3 && xueInfo[1] === jingmai && xueInfo[2] === `${nextXueType}(${shengWuXing})`) {
+                    return xueInfo[0];
+                }
+            }
+            return "无";
+        }
+
+        function GetHeRiHuYongXue(riGan, shiChen) {
+            const heRiMap = {
+                "甲": "己", "己": "甲", "乙": "庚", "庚": "乙",
+                "丙": "辛", "辛": "丙", "丁": "壬", "壬": "丁",
+                "戊": "癸", "癸": "戊"
+            };
+            if (!heRiMap.hasOwnProperty(riGan)) return "无";
+            const heRi = heRiMap[riGan];
+            const key = `${heRi}日${shiChen}`;
+            if (ZWLC_XUEWEI_DETAIL.hasOwnProperty(key)) {
+                const xueInfo = ZWLC_XUEWEI_DETAIL[key];
+                if (xueInfo && Array.isArray(xueInfo) && xueInfo.length >= 2) {
+                    return `${heRi}日${shiChen}：${xueInfo[0]}（${xueInfo[1]}）`;
+                }
+            }
+            return "无";
+        }
+
+        function GetXueWeiJingMai(xueWeiName) {
+            for (const key in ZWLC_XUEWEI_DETAIL) {
+                const xueInfo = ZWLC_XUEWEI_DETAIL[key];
+                if (xueInfo && Array.isArray(xueInfo) && xueInfo[0] === xueWeiName) {
+                    return xueInfo[1];
+                }
+            }
+            for (const jingmai in ZWLC_JINGMAI_XUEWEI) {
+                const xueList = ZWLC_JINGMAI_XUEWEI[jingmai];
+                if (xueList[0].includes(xueWeiName) || xueList[1].includes(xueWeiName)) {
+                    return jingmai;
+                }
+            }
+            return "未知经脉";
+        }
+
+        function GetXueWeiZhuZhi(xueWeiName) {
+            for (const key in ZWLC_XUEWEI_DETAIL) {
+                const xueInfo = ZWLC_XUEWEI_DETAIL[key];
+                if (xueInfo && Array.isArray(xueInfo) && xueInfo[0] === xueWeiName) {
+                    return xueInfo[3];
+                }
+            }
+            if (POINT_DETAIL_ENHANCED.hasOwnProperty(xueWeiName)) {
+                return `${POINT_DETAIL_ENHANCED[xueWeiName][2]}\n${POINT_DETAIL_ENHANCED[xueWeiName][3]}`;
+            }
+            return "暂无详细主治信息";
+        }
+
+        function formatTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // ===================== 灵龟八法核心功能 =====================
+        function LingGuiBaFaCore(inputDateTime, gender, longitude) {
+            const result = {};
+            try {
+                const trueSolarTime = CalculateTrueSolarTime(inputDateTime, longitude);
+                const riGanZhiInfo = GetRiGanZhi(trueSolarTime);
+                const riGan = riGanZhiInfo[0];
+                const riZhi = riGanZhiInfo[1];
+                const shiGanZhiInfo = GetShiGanZhi(riGan, trueSolarTime);
+                const riGanDs = GetGanZhiNum(riGan, RI_GAN_ZHI_NUM);
+                const riZhiDs = GetGanZhiNum(riZhi, RI_GAN_ZHI_NUM);
+                const shiGanDs = GetGanZhiNum(shiGanZhiInfo[0], SHI_GAN_ZHI_NUM);
+                const shiZhiDs = GetGanZhiNum(shiGanZhiInfo[1], SHI_GAN_ZHI_NUM);
+                const totalDs = riGanDs + riZhiDs + shiGanDs + shiZhiDs;
+                const isYangRi = YANG_RI_GAN.includes(riGan);
+                const riType = isYangRi ? "阳日" : "阴日";
+                let remainder = isYangRi ? totalDs % 9 : totalDs % 6;
+                remainder = remainder === 0 ? (isYangRi ? 9 : 6) : remainder;
+                let mainPoint, mainChannel, guestPoint, guestChannel;
+                if (remainder === 5) {
+                    if (gender === "男") {
+                        mainPoint = "照海";
+                        mainChannel = "通阴跷脉";
+                        guestPoint = JIAO_JING_PAIR[mainPoint];
+                        guestChannel = "通任脉";
+                    } else {
+                        mainPoint = "内关";
+                        mainChannel = "通阴维脉";
+                        guestPoint = "公孙";
+                        guestChannel = "通冲脉";
+                    }
+                } else {
+                    const pointInfo = NUM_TO_POINT[remainder];
+                    if (pointInfo && pointInfo.length >= 3) {
+                        mainPoint = pointInfo[0];
+                        mainChannel = pointInfo[1];
+                        guestPoint = pointInfo[2];
+                        guestChannel = GUEST_CHANNEL_DICT[guestPoint];
+                    } else {
+                        mainPoint = "未知";
+                        mainChannel = "未知";
+                        guestPoint = "未知";
+                        guestChannel = "未知";
+                    }
+                }
+                result["原始北京时间"] = formatTime(inputDateTime);
+                result["真太阳时"] = formatTime(trueSolarTime);
+                result["当地经度"] = longitude;
+                result["日干支"] = riGanZhiInfo[2];
+                result["时干支"] = shiGanZhiInfo[2];
+                result["时辰"] = shiGanZhiInfo[3];
+                result["余数"] = remainder;
+                result["日类型"] = riType;
+                result["性别"] = gender;
+                result["主穴"] = `${mainPoint}-${mainChannel}`;
+                result["配穴"] = `${guestPoint}-${guestChannel}`;
+                result["下针顺序"] = `先针${mainPoint}，后针${guestPoint}`;
+                if (POINT_DETAIL_ENHANCED.hasOwnProperty(mainPoint)) {
+                    const mpInfo = POINT_DETAIL_ENHANCED[mainPoint];
+                    result["主穴经脉归属"] = mpInfo[0];
+                    result["主穴位置"] = mpInfo[1];
+                    result["主穴详细治证"] = `${mpInfo[2]}\n${mpInfo[3]}\n${mpInfo[4]}\n${mpInfo[5]}`;
+                }
+                if (POINT_DETAIL_ENHANCED.hasOwnProperty(guestPoint)) {
+                    const gpInfo = POINT_DETAIL_ENHANCED[guestPoint];
+                    result["配穴经脉归属"] = gpInfo[0];
+                    result["配穴位置"] = gpInfo[1];
+                    result["配穴详细治证"] = `${gpInfo[2]}\n${gpInfo[3]}\n${gpInfo[4]}\n${gpInfo[5]}`;
+                }
+                const pair1 = `${mainPoint}-${guestPoint}`;
+                const pair2 = `${guestPoint}-${mainPoint}`;
+                if (POINT_COMBINATION_TREATMENT.hasOwnProperty(pair1)) {
+                    result["配伍治证"] = POINT_COMBINATION_TREATMENT[pair1];
+                } else if (POINT_COMBINATION_TREATMENT.hasOwnProperty(pair2)) {
+                    result["配伍治证"] = POINT_COMBINATION_TREATMENT[pair2];
+                }
+            } catch (e) {
+                result["错误信息"] = e.message;
+            }
+            return result;
+        }
+
+        function renderLingGuiResult(result) {
+            const resultDom = document.getElementById("lingguiResult");
+            let html = "";
+            if (result["错误信息"]) {
+                html = `<span class="text-red fw-bold">错误：</span>${result["错误信息"]}`;
+            } else {
+                html = `
+<span class="text-purple fw-bold">${result["性别"]}性-灵龟八法开穴结果</span>
+============================================
+北京时间：${result["原始北京时间"]}
+真太阳时：${result["真太阳时"]}（${result["当地经度"]}°E）
+日干支：${result["日干支"]} | 时干支：${result["时干支"]}
+时辰：${result["时辰"]} | 日类型：${result["日类型"]} | 计算余数：${result["余数"]}
+============================================
+<span class="text-blue fw-bold">【主穴详细信息】</span>
+主穴：${result["主穴"] || "未知"}
+位置：${result["主穴位置"] || "未知"}
+治证：${result["主穴详细治证"] || "未知"}
+============================================
+<span class="text-blue fw-bold">【配穴详细信息】</span>
+配穴：${result["配穴"] || "未知"}
+位置：${result["配穴位置"] || "未知"}
+治证：${result["配穴详细治证"] || "未知"}
+============================================
+<span class="text-blue fw-bold">【配伍治证】</span>
+${result["下针顺序"] || "未知"}
+${result["配伍治证"] || "未知"}
+                `;
+            }
+            resultDom.innerHTML = html;
+            document.getElementById("batchTableResult").innerHTML = "批量计算结果将显示在此处...";
+        }
+
+        function calcLingGuiCurrent() {
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const longitude = parseFloat(document.getElementById("longitude").value) || 120.0;
+            const result = LingGuiBaFaCore(new Date(), gender, longitude);
+            renderLingGuiResult(result);
+        }
+
+        function calcLingGuiCustom() {
+            const customDatetime = document.getElementById("customDatetime").value;
+            if (!customDatetime) {
+                alert("请选择自定义时间！");
+                return;
+            }
+            const inputDateTime = new Date(customDatetime);
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const longitude = parseFloat(document.getElementById("longitude").value) || 120.0;
+            const result = LingGuiBaFaCore(inputDateTime, gender, longitude);
+            renderLingGuiResult(result);
+        }
+
+        function calcLingGuiBatch() {
+            const batchDate = document.getElementById("batchDate").value;
+            if (!batchDate) {
+                alert("请选择全天计算的日期！");
+                return;
+            }
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const longitude = parseFloat(document.getElementById("longitude").value) || 120.0;
+            const targetDate = new Date(batchDate);
+            const riGanZhiInfo = GetRiGanZhi(targetDate);
+            const riGanZhi = riGanZhiInfo[2];
+            const tableData = [];
+            for (let i = 0; i < SHI_CHEN_FULL_CONFIG.length; i++) {
+                const shiConfig = SHI_CHEN_FULL_CONFIG[i];
+                const shiTime = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), shiConfig[3], shiConfig[4]);
+                const result = LingGuiBaFaCore(shiTime, gender, longitude);
+                tableData.push({
+                    shiGanZhi: result["时干支"] || "未知",
+                    timeRange: `${shiConfig[1]}:00-${shiConfig[2]}:00`,
+                    mainPoint: result["主穴"] || "未知",
+                    guestPoint: result["配穴"] || "未知",
+                    treatment: result["配伍治证"] || "无"
+                });
+            }
+            renderBatchTable(`灵龟八法 - ${batchDate} ${riGanZhi}日 全天12时辰开穴表`, 
+                ["时干支", "时间段", "主穴", "配穴", "配伍治证"], 
+                tableData, 
+                ["shiGanZhi", "timeRange", "mainPoint", "guestPoint", "treatment"]);
+            document.getElementById("lingguiResult").innerHTML = `已生成${batchDate}全天12时辰开穴表格，详见下方表格区！`;
+        }
+
+        function clearLingGuiResult() {
+            document.getElementById("lingguiResult").innerHTML = "请点击上方功能按钮进行计算...";
+        }
+
+        // ===================== 子午流注核心功能（全空值容错修复）=====================
+        function ZWLC_Core(inputDateTime, longitude) {
+            const result = {};
+            try {
+                const trueSolarTime = CalculateTrueSolarTime(inputDateTime, longitude);
+                const riGanZhiInfo = GetRiGanZhi(trueSolarTime);
+                const riGan = riGanZhiInfo[0] || "未知";
+                const shiGanZhiInfo = GetShiGanZhi(riGan, trueSolarTime);
+                const shiChen = shiGanZhiInfo[3] || "未知";
+                const shiZhi = shiGanZhiInfo[1] || "未知";
+                const shiGan = shiGanZhiInfo[0] || "未知";
+                let najiaKaiXue = "不开穴", najiaJingmai = "", najiaXing = "", naJiaZhiZheng = "";
+                let fanBenHuanYuan = "无", heRiHuYong = "无";
+                const isGuiRi = riGan === "癸";
+                const guiRiValidShiChen = ["亥时", "丑时", "卯时", "巳时", "未时", "酉时"];
+                const isGuiRiValid = guiRiValidShiChen.includes(shiChen);
+                const key = `${riGan}日${shiChen}`;
+                const isYangRi = "甲丙戊庚壬".includes(riGan);
+                const isYangShi = "子寅辰午申戌".includes(shiZhi);
+                const isYinShi = "丑卯巳未酉亥".includes(shiZhi);
+
+                // 纳甲法开穴判断 + 空值容错
+                if (ZWLC_XUEWEI_DETAIL.hasOwnProperty(key)) {
+                    const xueInfo = ZWLC_XUEWEI_DETAIL[key];
+                    if (xueInfo && Array.isArray(xueInfo) && xueInfo.length >= 5) {
+                        if ((isGuiRi && isGuiRiValid) || (isYangRi && isYangShi) || (!isYangRi && isYinShi)) {
+                            najiaKaiXue = xueInfo[0] || "不开穴";
+                            najiaJingmai = xueInfo[1] || "未知";
+                            najiaXing = xueInfo[2] || "未知";
+                            naJiaZhiZheng = xueInfo[3] || "无";
+                            fanBenHuanYuan = xueInfo[4] || "无";
+
+                            // 经生经/穴生穴推导 + 空值容错
+                            const shengJing = najiaJingmai ? GetShengJing(najiaJingmai, riGan) : "未知";
+                            const wuXingMatch = najiaXing.match(/\((\w)\)/);
+                            const currentXueWuXing = wuXingMatch ? wuXingMatch[1] : "未知";
+                            const xueWeiType = najiaXing.split("(")[0] || "未知";
+                            const shengXue = currentXueWuXing !== "未知" && xueWeiType !== "未知" 
+                                ? GetShengXue(najiaKaiXue, currentXueWuXing, xueWeiType) 
+                                : "无";
+                            
+                            naJiaZhiZheng += `\n【经生经】${najiaJingmai}→${shengJing} | 【穴生穴】${najiaKaiXue}→${shengXue}`;
+                        }
+                    }
+                }
+
+                // 合日互用 + 结果空值处理
+                if (najiaKaiXue === "不开穴") {
+                    heRiHuYong = GetHeRiHuYongXue(riGan, shiChen);
+                    if (heRiHuYong !== "无") {
+                        naJiaZhiZheng = `本时辰无原生开穴，启用合日互用：${heRiHuYong}`;
+                        const heRiXueMatch = heRiHuYong.split("：");
+                        najiaKaiXue = heRiXueMatch.length >= 2 ? heRiXueMatch[1].split("（")[0] : "不开穴";
+                    }
+                }
+
+                // 气纳三焦/血归包络 + 规则空值判断
+                const isRiGanChongJian = shiGan === riGan;
+                if (isRiGanChongJian && najiaKaiXue !== "不开穴") {
+                    const rule = ZWLC_RI_GAN_RULE[riGan];
+                    if (rule && Array.isArray(rule) && rule.length >= 7) {
+                        if (isYangRi) {
+                            fanBenHuanYuan += ` | 气纳三焦（${rule[6]}）`;
+                            naJiaZhiZheng += `\n日干重见·气纳三焦：取${rule[4]}${rule[5]}`;
+                        } else {
+                            fanBenHuanYuan += ` | 血归包络（${rule[6]}）`;
+                            naJiaZhiZheng += `\n日干重见·血归包络：取${rule[4]}${rule[5]}`;
+                        }
+                    }
+                }
+
+                // 纳子法核心：动态五行+子母穴 + 空值容错
+                const nzJingmai = ZWLC_SHICHEN_JINGMAI[shiChen] || "未知";
+                const dynamicWuXing = GetSeasonWuXing(trueSolarTime, nzJingmai) || "未知";
+                const ziMuXue = GetZiMuXueByWuXing(nzJingmai, dynamicWuXing);
+                let muXueZhiZheng = "【母穴治证】虚证专用";
+                let ziXueZhiZheng = "【子穴治证】实证专用";
+
+                // 提取子母穴治证 + 经脉存在性判断
+                if (nzJingmai !== "未知" && ZWLC_JINGMAI_XUEWEI.hasOwnProperty(nzJingmai)) {
+                    const jingInfo = ZWLC_JINGMAI_XUEWEI[nzJingmai];
+                    muXueZhiZheng = jingInfo[3].replace(jingInfo[0], ziMuXue.muXue);
+                    ziXueZhiZheng = jingInfo[4].replace(jingInfo[1], ziMuXue.ziXue);
+                }
+
+                // 组装结果：所有字段增加默认值，避免渲染报错
+                result["原始北京时间"] = formatTime(inputDateTime);
+                result["真太阳时"] = formatTime(trueSolarTime);
+                result["当地经度"] = longitude;
+                result["日干支"] = riGanZhiInfo[2] || "未知";
+                result["时辰"] = shiChen || "未知";
+                result["时干支"] = shiGanZhiInfo[2] || "未知";
+                // 纳子法结果
+                result["纳子法-当令经脉"] = nzJingmai;
+                result["纳子法-母穴"] = ziMuXue.muXue;
+                result["纳子法-母穴详细治证"] = muXueZhiZheng;
+                result["纳子法-子穴"] = ziMuXue.ziXue;
+                result["纳子法-子穴详细治证"] = ziXueZhiZheng;
+                result["纳子法-原穴"] = ziMuXue.yuanXue;
+                result["纳子法-五行说明"] = nzJingmai !== "未知" 
+                    ? `${nzJingmai}（${dynamicWuXing}），${dynamicWuXing === "水" ? "冬至~夏至" : "夏至~冬至"}` 
+                    : "未知";
+                // 纳甲法结果
+                result["纳甲法-开穴"] = najiaKaiXue;
+                result["纳甲法-经脉"] = najiaJingmai;
+                result["纳甲法-穴位类型"] = najiaXing;
+                result["纳甲法-详细治证"] = naJiaZhiZheng;
+                result["纳甲法-返本还原"] = fanBenHuanYuan;
+                result["合日互用-可用穴位"] = heRiHuYong;
+            } catch (e) {
+                // 异常时填充默认值，保证程序不中断
+                result["错误信息"] = `纳甲法计算异常：${e.message}`;
+                result["合日互用-可用穴位"] = "无";
+                result["纳子法-当令经脉"] = "未知";
+                result["纳子法-母穴"] = "未知";
+                result["纳子法-子穴"] = "未知";
+                result["纳子法-原穴"] = "未知";
+                result["纳子法-五行说明"] = "未知";
+                result["纳甲法-开穴"] = "不开穴";
+            }
+            return result;
+        }
+
+        // 子午流注结果渲染 + 全字段默认值判断
+        function renderZWLCResult(result) {
+            const resultDom = document.getElementById("zwlcResult");
+            let html = "";
+            if (result["错误信息"]) {
+                html = `<span class="text-red fw-bold">错误：</span>${result["错误信息"]}`;
+            } else {
+                html = `
+<span class="text-orange fw-bold">子午流注开穴结果（纳甲+纳子法）</span>
+============================================
+北京时间：${result["原始北京时间"]}
+真太阳时：${result["真太阳时"]}（${result["当地经度"]}°E）
+日干支：${result["日干支"]} | 时干支：${result["时干支"]} | 时辰：${result["时辰"]}
+============================================
+<span class="text-blue fw-bold">【纳子法-当令经脉主治】</span>
+当令经脉：${result["纳子法-当令经脉"]} | 原穴：${result["纳子法-原穴"]}
+五行说明：${result["纳子法-五行说明"]}
+母穴（补）：${result["纳子法-母穴"]}
+母穴治证：${result["纳子法-母穴详细治证"] || "无"}
+子穴（泻）：${result["纳子法-子穴"]}
+子穴治证：${result["纳子法-子穴详细治证"] || "无"}
+============================================
+<span class="text-blue fw-bold">【纳甲法-标准开穴主治】</span>
+开穴：${result["纳甲法-开穴"]}
+${result["纳甲法-开穴"] !== "不开穴" ? `经脉/类型：${result["纳甲法-经脉"] || "未知"}/${result["纳甲法-穴位类型"] || "未知"}` : "经脉/类型：无"}
+返本还原/纳穴：${result["纳甲法-返本还原"] || "无"}
+合日互用：${result["合日互用-可用穴位"] || "无"}
+详细治证：${result["纳甲法-详细治证"] || "无"}
+                `;
+            }
+            resultDom.innerHTML = html;
+            document.getElementById("batchTableResult").innerHTML = "批量计算结果将显示在此处...";
+        }
+
+        // 子午流注当前时间开穴
+        function calcZWLCCurrent() {
+            const longitude = parseFloat(document.getElementById("longitude").value) || 120.0;
+            const result = ZWLC_Core(new Date(), longitude);
+            renderZWLCResult(result);
+        }
+
+        // 子午流注自定义时间开穴
+        function calcZWLCCustom() {
+            const customDatetime = document.getElementById("customDatetime").value;
+            if (!customDatetime) {
+                alert("请选择自定义时间！");
+                return;
+            }
+            const inputDateTime = new Date(customDatetime);
+            const longitude = parseFloat(document.getElementById("longitude").value) || 120.0;
+            const result = ZWLC_Core(inputDateTime, longitude);
+            renderZWLCResult(result);
+        }
+
+        // 子午流注全天批量开穴 + 全字段空值处理
+        function calcZWLCBatch() {
+            const batchDate = document.getElementById("batchDate").value;
+            if (!batchDate) {
+                alert("请选择全天计算的日期！");
+                return;
+            }
+            const longitude = parseFloat(document.getElementById("longitude").value) || 120.0;
+            const targetDate = new Date(batchDate);
+            const riGanZhiInfo = GetRiGanZhi(targetDate);
+            const riGanZhi = riGanZhiInfo[2] || "未知";
+
+            const tableData = [];
+            for (let i = 0; i < SHI_CHEN_FULL_CONFIG.length; i++) {
+                const shiConfig = SHI_CHEN_FULL_CONFIG[i];
+                const shiTime = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), shiConfig[3], shiConfig[4]);
+                const result = ZWLC_Core(shiTime, longitude);
+                
+                // 精简纳子法主治 + 空值容错
+                const muXueZhiZheng = (result["纳子法-母穴详细治证"] || "【母穴治证】虚证专用").substring(0, 50).replace(/\n/g, "；");
+                const ziXueZheng = (result["纳子法-子穴详细治证"] || "【子穴治证】实证专用").substring(0, 50).replace(/\n/g, "；");
+                const naZiZhuZhi = `母（补）：${muXueZhiZheng}；子（泻）：${ziXueZheng}`;
+                
+                // 精简纳甲法主治 + 空值容错
+                let naJiaZhuZhi = "无对应穴位主治信息";
+                if (result["纳甲法-开穴"] !== "不开穴" && result["纳甲法-开穴"] !== "") {
+                    naJiaZhuZhi = GetXueWeiZhuZhi(result["纳甲法-开穴"]).substring(0, 80).replace(/\n/g, "；") + "...";
+                } else if (result["合日互用-可用穴位"] !== "无" && result["合日互用-可用穴位"]) {
+                    const heRiXueMatch = result["合日互用-可用穴位"].split("：");
+                    const pureXueWei = heRiXueMatch.length >= 2 ? heRiXueMatch[1].split("（")[0] : "";
+                    naJiaZhuZhi = pureXueWei ? GetXueWeiZhuZhi(pureXueWei).substring(0, 80).replace(/\n/g, "；") + "..." : "无";
+                }
+
+                tableData.push({
+                    shiGanZhi: result["时干支"] || "未知",
+                    timeRange: `${shiConfig[1]}:00-${shiConfig[2]}:00`,
+                    nzJingmai: result["纳子法-当令经脉"] || "未知",
+                    nzZiMuXue: `${result["纳子法-母穴"] || "未知"}/${result["纳子法-子穴"] || "未知"}`,
+                    nzZhuZhi: naZiZhuZhi,
+                    njKaiXue: result["纳甲法-开穴"] || "不开穴",
+                    njJingXing: result["纳甲法-开穴"] !== "不开穴" 
+                        ? `${result["纳甲法-经脉"] || "未知"}/${result["纳甲法-穴位类型"] || "未知"}` 
+                        : "无",
+                    fanBen: result["纳甲法-返本还原"] || "无",
+                    heRiHuYong: result["合日互用-可用穴位"] || "无",
+                    njZhuZhi: naJiaZhuZhi,
+                    wuXingDesc: result["纳子法-五行说明"] || "未知"
+                });
+            }
+
+            // 渲染批量表格
+            renderBatchTable(`子午流注 - ${batchDate} ${riGanZhi}日 全天12时辰开穴表`, 
+                ["时干支", "时间段", "纳子法-当令经脉", "纳子法-母/子穴", "纳子法-子母穴主治", 
+                 "纳甲法-开穴", "纳甲法-经脉/类型", "返本还原/纳穴", "合日互用", "纳甲法-穴位主治", "纳子法-五行说明"], 
+                tableData, 
+                ["shiGanZhi", "timeRange", "nzJingmai", "nzZiMuXue", "nzZhuZhi", 
+                 "njKaiXue", "njJingXing", "fanBen", "heRiHuYong", "njZhuZhi", "wuXingDesc"]);
+            document.getElementById("zwlcResult").innerHTML = `已生成${batchDate}全天12时辰开穴表格，详见下方表格区！`;
+        }
+
+        // 清空子午流注结果
+        function clearZWLCResult() {
+            document.getElementById("zwlcResult").innerHTML = "请点击上方功能按钮进行计算...";
+        }
+
+        // ===================== 批量表格渲染功能（修复语法错误）=====================
+        function renderBatchTable(title, thList, dataList, keyList) {
+            const tableDom = document.getElementById("batchTableResult");
+            let html = `
+<h5 class="text-center mb-3">${title}</h5>
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            ${thList.map(th => `<th>${th}</th>`).join("")}
+        </tr>
+    </thead>
+    <tbody>
+            `;
+            if (dataList.length === 0) {
+                html += `<tr><td colspan="${thList.length}" class="text-center">暂无数据</td></tr>`;
+            } else {
+                dataList.forEach(item => {
+                    html += `<tr>`;
+                    keyList.forEach(key => {
+                        html += `<td>${item[key] || ""}</td>`;
+                    });
+                    html += `</tr>`;
+                });
+            }
+            html += `
+    </tbody>
+</table>
+`;
+            tableDom.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
