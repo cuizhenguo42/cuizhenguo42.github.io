@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>培元九宫穴 - 治疗方案查询</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .nav-tabs {
+            margin-bottom: 20px;
+        }
+        .table th {
+            background-color: #f8f9fa;
+        }
+        .tab-content {
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏：返回导入页 + 方案查询 -->
+        <nav class="mb-4">
+            <a href="index.html" class="btn btn-outline-primary">← 返回数据导入</a>
+            <h2 class="d-inline-block ms-3">培元九宫穴治疗方案（下焦靶向版）</h2>
+        </nav>
+
+        <!-- 选项卡 -->
+        <ul class="nav nav-tabs" id="schemeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="acupoint-tab" data-bs-toggle="tab" data-bs-target="#acupoint" type="button" role="tab">穴位定位</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="operation-tab" data-bs-toggle="tab" data-bs-target="#operation" type="button" role="tab">针刺流程</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="luoshu-tab" data-bs-toggle="tab" data-bs-target="#luoshu" type="button" role="tab">洛书数行针</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="course-tab" data-bs-toggle="tab" data-bs-target="#course" type="button" role="tab">疗程与禁忌</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="data-tab" data-bs-toggle="tab" data-bs-target="#data" type="button" role="tab">导入数据预览</button>
+            </li>
+        </ul>
+
+        <!-- 选项卡内容 -->
+        <div class="tab-content" id="schemeTabsContent">
+            <!-- 1. 穴位定位 -->
+            <div class="tab-pane fade show active" id="acupoint" role="tabpanel">
+                <h4 class="mb-3">九宫方位-穴位对应表</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>九宫方位</th>
+                                <th>对应穴位</th>
+                                <th>精准定位</th>
+                                <th>穴位归属</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>中宫</td><td>关元</td><td>脐下3寸，前正中线上</td><td>任脉</td></tr>
+                            <tr><td>乾宫</td><td>气海</td><td>脐下1.5寸，前正中线上</td><td>任脉</td></tr>
+                            <tr><td>坤宫</td><td>中极</td><td>脐下4寸，前正中线上</td><td>任脉</td></tr>
+                            <tr><td>巽宫</td><td>大巨（左）</td><td>脐下2寸，前正中线旁开2寸</td><td>足阳明胃经</td></tr>
+                            <tr><td>兑宫</td><td>大巨（右）</td><td>脐下2寸，前正中线旁开2寸</td><td>足阳明胃经</td></tr>
+                            <tr><td>坎宫</td><td>胞门（左）</td><td>脐下3寸（关元水平），前正中线旁开2寸</td><td>经外奇穴</td></tr>
+                            <tr><td>离宫</td><td>子户（右）</td><td>脐下3寸（关元水平），前正中线旁开2寸</td><td>经外奇穴</td></tr>
+                            <tr><td>艮宫</td><td>子宫穴（左）</td><td>脐下4寸（中极水平），前正中线旁开3寸</td><td>经外奇穴</td></tr>
+                            <tr><td>震宫</td><td>子宫穴（右）</td><td>脐下4寸（中极水平），前正中线旁开3寸</td><td>经外奇穴</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. 针刺流程 -->
+            <div class="tab-pane fade" id="operation" role="tabpanel">
+                <h4 class="mb-3">标准化针刺操作流程</h4>
+                <h5>一、术前准备</h5>
+                <ul>
+                    <li>体位：患者仰卧位，腹部放松，暴露脐下至耻骨联合区域</li>
+                    <li>排空小便：必须执行，防止针刺关元/中极时误伤膀胱</li>
+                    <li>消毒：75%酒精棉球环形擦拭穴位，直径≥5cm</li>
+                    <li>针具：0.30mm×40mm（常规体型）/50mm（肥胖体型）不锈钢毫针</li>
+                </ul>
+
+                <h5>二、针刺顺序与操作</h5>
+                <div class="table-responsive mb-3">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>操作步骤</th>
+                                <th>穴位</th>
+                                <th>进针角度/深度</th>
+                                <th>针感要求（男/女）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>第一步（核心三宫）</td><td>中宫（关元）</td><td>向下斜刺30°，25-35mm</td><td>男：放射至阴茎头部；女：尿道口周围</td></tr>
+                            <tr><td>第一步（核心三宫）</td><td>乾宫（气海）</td><td>直刺，20-30mm</td><td>脐周酸胀，可扩散至全腹</td></tr>
+                            <tr><td>第一步（核心三宫）</td><td>坤宫（中极）</td><td>向下斜刺30°，25-35mm</td><td>男：放射至阴茎头部；女：阴道口周围</td></tr>
+                            <tr><td>第二步（剩余六宫）</td><td>坎宫（左胞门）/离宫（右子户）</td><td>直刺（略向中线），25-30mm</td><td>腹股沟酸胀</td></tr>
+                            <tr><td>第二步（剩余六宫）</td><td>巽宫（左大巨）/兑宫（右大巨）</td><td>直刺，30-35mm</td><td>男：传至睾丸部；女：腹股沟韧带下</td></tr>
+                            <tr><td>第二步（剩余六宫）</td><td>艮宫（左子宫）/震宫（右子宫）</td><td>向前列腺/子宫斜刺45°，30-40mm</td><td>男：放散至阴茎部；女：下腹部深处</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5>三、留针与出针</h5>
+                <ul>
+                    <li>留针：20-30分钟，每10分钟重复对应洛书数行针</li>
+                    <li>出针：反向顺序（震宫→艮宫→...→中宫），干棉球按压针孔1分钟</li>
+                </ul>
+            </div>
+
+            <!-- 3. 洛书数行针 -->
+            <div class="tab-pane fade" id="luoshu" role="tabpanel">
+                <h4 class="mb-3">洛书九宫数行针规范（捻转补法）</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>九宫方位</th>
+                                <th>洛书数</th>
+                                <th>行针次数（顺时针捻转）</th>
+                                <th>对应穴位</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>离宫</td><td>9</td><td>9次</td><td>子户（右）</td></tr>
+                            <tr><td>坎宫</td><td>1</td><td>1次</td><td>胞门（左）</td></tr>
+                            <tr><td>震宫</td><td>3</td><td>3次</td><td>子宫穴（右）</td></tr>
+                            <tr><td>兑宫</td><td>7</td><td>7次</td><td>大巨（右）</td></tr>
+                            <tr><td>坤宫</td><td>2</td><td>2次</td><td>中极</td></tr>
+                            <tr><td>巽宫</td><td>4</td><td>4次</td><td>大巨（左）</td></tr>
+                            <tr><td>乾宫</td><td>6</td><td>6次</td><td>气海</td></tr>
+                            <tr><td>艮宫</td><td>8</td><td>8次</td><td>子宫穴（左）</td></tr>
+                            <tr><td>中宫</td><td>5</td><td>5次</td><td>关元</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info">
+                    <strong>核心原则</strong>：戴九履一，左三右七，二四为肩，六八为足，而五居中（顺时针捻转补法，角度≤90°，频率60次/分钟）。
+                </div>
+            </div>
+
+            <!-- 4. 疗程与禁忌 -->
+            <div class="tab-pane fade" id="course" role="tabpanel">
+                <h4 class="mb-3">疗程设置</h4>
+                <ul>
+                    <li>10次为1个疗程，每周治疗5次</li>
+                    <li>连续治疗6个疗程（共2个月），疗程间无需休息</li>
+                    <li>显效标准：临床症状（尿频、尿急、腰膝酸软等）基本消失，针感传导顺畅</li>
+                </ul>
+
+                <h4 class="mb-3">禁忌说明</h4>
+                <div class="warning-box">
+                    <h5>绝对禁忌</h5>
+                    <ul>
+                        <li>急性生殖泌尿系统炎症（急性前列腺炎、尿道炎）、腹部皮肤溃疡/感染</li>
+                        <li>出血倾向、孕妇（关元/中极/子宫穴为孕妇禁针穴）</li>
+                        <li>过度饥饿、疲劳、醉酒者（防止晕针）</li>
+                    </ul>
+                    <h5 class="mt-2">相对禁忌</h5>
+                    <ul>
+                        <li>体型消瘦者浅刺，避免刺伤腹壁动脉</li>
+                        <li>晕针反应：立即停针，平卧饮温水，严重者针刺人中/内关</li>
+                    </ul>
+                </div>
+
+                <h4 class="mb-3">术后护理</h4>
+                <ul>
+                    <li>针刺后2小时内禁止洗冷水澡，避免腹部受凉</li>
+                    <li>饮食忌生冷、辛辣、油腻，忌烟酒</li>
+                    <li>治疗期间避免性生活，减少下焦气血耗损</li>
+                </ul>
+            </div>
+
+            <!-- 5. 导入数据预览 -->
+            <div class="tab-pane fade" id="data" role="tabpanel">
+                <div class="mb-3">
+                    <label class="form-label">Access数据库路径：</label>
+                    <input type="text" id="dbPathPreview" class="form-control" placeholder="示例：C:\针灸查询系统.accdb" value="C:\针灸查询系统.accdb">
+                    <button id="loadDataBtn" class="btn btn-primary mt-2">加载导入数据</button>
+                </div>
+                <div class="table-responsive" id="dataTableContainer" style="display: none;">
+                    <table class="table table-bordered table-sm" id="dataTable">
+                        <thead id="dataTableHead"></thead>
+                        <tbody id="dataTableBody"></tbody>
+                    </table>
+                </div>
+                <div id="dataEmptyTip" class="text-muted" style="display: none;">暂无导入数据，请先在「数据导入」页上传Excel文件</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 加载导入数据
+        document.getElementById('loadDataBtn').addEventListener('click', async () => {
+            const dbPath = document.getElementById('dbPathPreview').value.trim();
+            if (!dbPath) {
+                alert('请输入数据库路径！');
+                return;
+            }
+
+            try {
+                const res = await fetch('http://localhost:3000/preview-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dbPath })
+                });
+                const data = await res.json();
+
+                const tableContainer = document.getElementById('dataTableContainer');
+                const emptyTip = document.getElementById('dataEmptyTip');
+                const tableHead = document.getElementById('dataTableHead');
+                const tableBody = document.getElementById('dataTableBody');
+
+                if (data.success && data.data.length > 0) {
+                    // 显示数据表格
+                    tableContainer.style.display = 'block';
+                    emptyTip.style.display = 'none';
+
+                    // 生成表头
+                    const headers = Object.keys(data.data[0]);
+                    tableHead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+                    // 生成表体
+                    tableBody.innerHTML = data.data.map(row => 
+                        `<tr>${headers.map(h => `<td>${row[h] || ''}</td>`).join('')}</tr>`
+                    ).join('');
+                } else {
+                    // 显示空提示
+                    tableContainer.style.display = 'none';
+                    emptyTip.style.display = 'block';
+                }
+            } catch (err) {
+                alert(`加载失败：${err.message}`);
+            }
+        });
+    </script>
+</body>
+</html>
