@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>灵龟八法取穴系统 - 最终优化版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        /* 标题样式 - 中医朱砂红主题 */
+        .page-title {
+            text-align: center;
+            color: #8B0000;
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 26px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .page-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 3px;
+            background-color: #db1f71;
+            border-radius: 2px;
+        }
+
+        .page-desc {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        /* 功能选项卡 - 横向滚动适配移动端 */
+        /* 功能选项卡 - 竖向排列（替换原有横向滚动样式） */
+        .tabs-wrap {
+            margin-bottom: 20px;
+            border-right: 1px solid #e8e8e8; /* 右侧分隔线，可选 */
+            width: 220px; /* 固定选项卡宽度 */
+            float: left; /* 左浮动，和表单并排 */
+            padding-right: 10px;
+        }
+
+        .function-tabs {
+            display: flex;
+            flex-direction: column; /* 竖向排列 */
+            gap: 5px; /* 选项卡之间的间距 */
+        }
+
+        .function-tab {
+            padding: 12px 16px; /* 关键修改：统一左右内边距为16px，让文字起始位置一致 */
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            position: relative;
+            width: 100%; /* 宽度100% */
+            text-align: left; /* 文字左对齐（基准统一） */
+            transition: color 0.3s, background-color 0.3s;
+            border-radius: 8px; /* 圆角，提升美观 */
+            box-sizing: border-box; /* 强制盒模型统一，避免内边距影响宽度 */
+            line-height: 1.5; /* 统一行高，确保文字垂直居中 */
+            margin: 0; /* 清除默认外边距 */
+        }
+
+        .function-tab:hover {
+            background-color: #f8f9fa; /* hover时背景色 */
+        }
+
+        .function-tab.active {
+            color: #8B0000;
+            font-weight: 600;
+            background-color: #fff0f0; /* 选中态背景色 */
+            /* 关键：选中态和普通态padding完全一致，避免错位 */
+            padding: 12px 16px;
+        }
+
+        .function-tab.active::after {
+            content: "";
+            position: absolute;
+            right: 0; /* 选中态标识移到右侧 */
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: #c87f32;
+            border-radius: 2px;
+            /* 关键：调整伪元素位置，避免挤压文字 */
+            box-sizing: border-box;
+        }
+        /* 表单区域适配竖向选项卡 */
+        .form-section {
+            margin-left: 240px; /* 大于选项卡宽度+间距，避免重叠 */
+        }
+
+        /* 表单样式 */
+        .form-section {
+            display: none;
+            margin-bottom: 25px;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1f4668;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #8B0000;
+            box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        /* 按钮样式 - 渐变+加载状态 */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B0000 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #690000 0%, #a52a2a 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            background: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-reset {
+            background-color: #f8f9fa;
+            color: #666;
+            border: 1px solid #e8e8e8;
+        }
+
+        .btn-reset:hover {
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        /* 结果区域 - 长文本适配 */
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fafbfc;
+            border-radius: 10px;
+            display: none;
+            border: 1px solid #e8e8e8;
+        }
+
+        .result-card {
+            margin-bottom: 25px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #8B0000;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f2f5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-title::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            background-color: #c87f32;
+            border-radius: 2px;
+        }
+
+        .result-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* 穴位详情 - 长文本折叠/展开核心样式 */
+        .point-detail {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid #8B0000;
+            transition: all 0.3s;
+            word-break: break-word; /* 长文本自动换行，防止溢出 */
+        }
+
+        .point-detail:hover {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .point-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .point-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #8B0000;
+        }
+
+        .toggle-btn {
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            user-select: none; /* 防止文字选中 */
+            transition: transform 0.3s;
+        }
+
+        .toggle-btn.rotate {
+            transform: rotate(180deg); /* 展开时箭头旋转 */
+        }
+
+        .point-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease; /* 平滑展开/折叠 */
+            line-height: 1.9;
+            font-size: 14px;
+        }
+
+        .point-content.show {
+            max-height: 10000px; /* 足够大的数值，容纳所有治证文本 */
+        }
+
+        .point-content p {
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+
+        .point-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .point-content strong {
+            color: #8B0000;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        /* 表格容器 - 冻结表头+横向滚动适配 */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            -webkit-overflow-scrolling: touch;
+            position: relative; /* 相对定位，为表头粘性定位做准备 */
+            max-height: 500px; /* 表格最大高度，超出滚动 */
+            overflow-y: auto; /* 纵向滚动 */
+        }
+
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px; /* 新增纵向滚动条样式 */
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #e8e8e8;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background-color: #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+           table-layout: auto; /* 关键：自动布局，列宽适配内容 */
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+            /* 核心换行属性：允许文字换行、长文本截断换行 */
+            white-space: normal; /* 取消 nowrap，允许换行 */
+            word-wrap: break-word; /* 长单词/文本强制换行 */
+            word-break: break-all; /* 兼容所有浏览器的换行 */
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            color: #8B0000;
+            position: sticky; /* 粘性定位 - 核心冻结表头 */
+            top: 0; /* 表头固定在顶部 */
+            z-index: 10; /* 确保表头在最上层，不被内容遮挡 */
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); /* 加阴影，提升层次感 */
+                
+            /* 仅给下针建议列加最小宽度，保证可读性，其他列自动适配 */
+            &:nth-child(7) { min-width: 180px; } /* 下针建议列最小宽度，避免太窄 */
+            列宽分配：下针建议加宽，其他列收窄 */
+
+        }
+
+        td {
+            /* 同步列宽，与表头匹配 */
+            &:nth-child(1) { width: 12%; white-space: nowrap; }
+            &:nth-child(2) { width: 12%; white-space: nowrap; }
+            &:nth-child(3) { width: 10%; white-space: nowrap; }
+            &:nth-child(4) { width: 15%; white-space: nowrap; }
+            &:nth-child(5) { width: 10%; white-space: nowrap; }
+            &:nth-child(6) { width: 15%; white-space: nowrap; }
+            &:nth-child(7) { width: 26%; white-space: normal; } /* 下针建议允许换行 */
+        }
+
+        tr:hover {
+            background-color: #fafbfc;
+        }
+
+        /* 加载动画 */
+        .loader {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: loader 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn-primary.loading .loader {
+            display: block;
+        }
+
+        .btn-primary.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes loader {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 配伍提示框 */
+        .compatibility-tip {
+            background: #fff8e6;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffe8b3;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #8B0000;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        /* 移动端适配（768px以下） */
+
+        /* 移动端适配（768px以下） */
+        @media (max-width: 768px) {
+            .tabs-wrap {
+                width: 100%; /* 移动端选项卡宽度100% */
+                float: none; /* 取消浮动 */
+                border-right: none;
+                border-bottom: 1px solid #e8e8e8; /* 底部分隔线 */
+                padding-right: 0;
+                padding-bottom: 10px;
+            }
+
+            .form-section {
+                margin-left: 0; /* 移动端表单无左外边距 */
+            }
+
+            .function-tab {
+                padding: 8px 16px; /* 关键：移动端也统一左右内边距为16px */
+                font-size: 14px;
+                line-height: 1.5; /* 保持行高统一 */
+            }
+
+            .function-tab.active {
+                padding: 8px 16px; /* 移动端选中态padding和普通态一致 */
+            }
+
+            .btn-group {
+                flex-direction: column; /* 按钮竖向排列 */
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .result-info {
+                grid-template-columns: 1fr; /* 栅格列数改为1列 */
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+           th:nth-child(7) { min-width: 120px; } /* 移动端下针建议列最小宽度适配 */
+            td {
+                &:nth-child(7) { white-space: normal; } /* 保持换行，避免溢出 */
+            }
+
+            .point-detail {
+                padding: 15px;
+            }
+
+            .point-content {
+                font-size: 13px;
+                line-height: 1.8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="page-title">灵龟八法开穴计算器</h2>
+        <p class="page-desc">基于传统针灸时间疗法规则 | 支持全天12时辰批量开穴 | 完整显示所有治证 | 作者：蓝天白云</p>
+
+        <!-- 功能选项卡 -->
+        <div class="tabs-wrap">
+            <div class="function-tabs">
+                <button class="function-tab active" data-tab="auto">1. 自动计算（当前时间）</button>
+                <button class="function-tab" data-tab="manual">2. 手动输入时间计算</button>
+                <button class="function-tab" data-tab="full-day">3. 全天12时辰穴位表</button>
+            </div>
+        </div>
+
+        <!-- 1. 自动计算表单 -->
+        <div class="form-section active" id="auto-form">
+            <div class="form-group">
+                <label for="auto-gender">性别</label>
+                <select id="auto-gender">
+                    <option value="男" selected>男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="auto-longitude">当地经度（示例：芜湖118.35，北京116.40，上海121.48，默认120.0°E）</label>
+                <input type="number" id="auto-longitude" step="0.01" min="73.0" max="135.0" value="120.0" placeholder="请输入中国境内经度（73.0-135.0，保留两位小数）">
+            </div>
+            <div class="btn-group">
+                <button class="btn-primary" id="auto-calc-btn" onclick="calculateAuto()">
+                    <span class="loader"></span>
+                    <span class="btn-text">开始计算</span>
+                </button>
+                <button class="btn-reset" onclick="resetForm('auto')">重置表单</button>
+            </div>
+        </div>
+
+        <!-- 2. 手动计算表单 -->
+        <div class="form-section" id="manual-form">
+            <div class="form-group">
+                <label for="manual-datetime">计算时间（默认当前时间）</label>
+                <input type="datetime-local" id="manual-datetime">
+            </div>
+            <div class="form-group">
+                <label for="manual-gender">性别</label>
+                <select id="manual-gender">
+                    <option value="男" selected>男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="manual-longitude">当地经度（示例：芜湖118.35，北京116.40，上海121.48，默认120.0°E）</label>
+                <input type="number" id="manual-longitude" step="0.01" min="73.0" max="135.0" value="120.0" placeholder="请输入中国境内经度（73.0-135.0，保留两位小数）">
+            </div>
+            <div class="btn-group">
+                <button class="btn-primary" id="manual-calc-btn" onclick="calculateManual()">
+                    <span class="loader"></span>
+                    <span class="btn-text">开始计算</span>
+                </button>
+                <button class="btn-reset" onclick="resetForm('manual')">重置表单</button>
+            </div>
+        </div>
+
+        <!-- 3. 全天12时辰计算表单 -->
+        <div class="form-section" id="full-day-form">
+            <div class="form-group">
+                <label for="full-day-date">目标日期（默认当前日期）</label>
+                <input type="date" id="full-day-date">
+            </div>
+            <div class="form-group">
+                <label for="full-day-gender">性别</label>
+                <select id="full-day-gender">
+                    <option value="男" selected>男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="full-day-longitude">当地经度（示例：芜湖118.35，北京116.40，上海121.48，默认120.0°E）</label>
+                <input type="number" id="full-day-longitude" step="0.01" min="73.0" max="135.0" value="120.0" placeholder="请输入中国境内经度（73.0-135.0，保留两位小数）">
+            </div>
+            <div class="btn-group">
+                <button class="btn-primary" id="full-day-calc-btn" onclick="calculateFullDay()">
+                    <span class="loader"></span>
+                    <span class="btn-text">开始计算</span>
+                </button>
+                <button class="btn-reset" onclick="resetForm('full-day')">重置表单</button>
+            </div>
+        </div>
+
+        <!-- 结果展示区域 -->
+        <div class="result-section" id="result-area">
+            <div id="single-result" style="display: none;"></div>
+            <div id="full-day-result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===================== 全局常量配置（灵龟八法核心规则+穴位完整数据）=====================
+        // 日干支代数映射
+        const RI_GAN_ZHI_NUM = {
+            10: new Set(['甲', '己', '辰', '丑', '戌', '未']),
+            9: new Set(['乙', '庚', '申', '酉']),
+            8: new Set(['丁', '壬', '寅', '卯']),
+            7: new Set(['戊', '癸', '丙', '辛', '巳', '午', '亥', '子'])
+        };
+        // 时干支代数映射
+        const SHI_GAN_ZHI_NUM = {
+            9: new Set(['甲', '己', '子', '午']),
+            8: new Set(['乙', '庚', '丑', '未']),
+            7: new Set(['丙', '辛', '寅', '申']),
+            6: new Set(['丁', '壬', '卯', '酉']),
+            5: new Set(['戊', '癸', '辰', '戌']),
+            4: new Set(['巳', '亥'])
+        };
+        // 标准天干/地支
+        const STANDARD_TIAN_GAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+        const STANDARD_DI_ZHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+        // 余数对应主客穴（灵龟八法核心规则）
+        const NUM_TO_POINT = {
+            1: ['申脉', '通阳跷脉', '后溪'],
+            2: ['照海', '通阴跷脉', '列缺'],
+            3: ['外关', '通阳维脉', '足临泣'],
+            4: ['足临泣', '通带脉', '外关'],
+            5: ['照海', '通阴跷脉', '列缺'],
+            6: ['公孙', '通冲脉', '内关'],
+            7: ['后溪', '通督脉', '申脉'],
+            8: ['内关', '通阴维脉', '公孙'],
+            9: ['列缺', '通任脉', '照海']
+        };
+        // 12时辰配置（对应北京时间）
+        const SHI_CHEN_CONFIG = [
+            ['子时', 23, 1], ['丑时', 1, 3], ['寅时', 3, 5], ['卯时', 5, 7],
+            ['辰时', 7, 9], ['巳时', 9, 11], ['午时', 11, 13], ['未时', 13, 15],
+            ['申时', 15, 17], ['酉时', 17, 19], ['戌时', 19, 21], ['亥时', 21, 23]
+        ];
+        // 阳日/阴日划分
+        const YANG_RI_GAN = ['甲', '丙', '戊', '庚', '壬'];
+        const YIN_RI_GAN = ['乙', '丁', '己', '辛', '癸'];
+        // 穴位对应通脉类型
+        const POINT_CHANNEL_MAP = {
+            '后溪': '通督脉', '列缺': '通任脉', '外关': '通阳维脉',
+            '公孙': '通冲脉', '申脉': '通阳跷脉', '足临泣': '通带脉',
+            '内关': '通阴维脉', '照海': '通阴跷脉'
+        };
+
+        // 穴位详细信息（完整单独治证，无任何省略）
+        const POINT_DETAIL = {
+            '公孙': {
+                '经脉归属': '足太阴脾经，八脉交会穴（通冲脉）',
+                '通脉类型': '通冲脉，冲脉为十二经之海、血海，主一身气血冲融',
+                '精确位置': '在足内侧，第1跖骨基底的前下方凹陷处，赤白肉际交界；取穴时，正坐垂足或仰卧位，当太白穴（第1跖骨小头后缘凹陷处）后1寸，或按压有酸胀感处即为穴位，对应解剖位置为跖骨底前下缘，跖长屈肌腱与展肌之间，布有足背内侧皮神经分支及足底内侧神经，浅层为足背静脉网，深层为跗内侧动脉及静脉分支',
+                '单独治证': '1. 脾胃系病症（核心主治）：胃痛（脾胃虚寒、肝胃不和、饮食停滞型）、胃胀、痞满、呕吐、呃逆、嗳气、腹痛（虚寒性、气滞型）、腹泻（脾虚泄泻、五更泻）、痢疾、消化不良、食欲不振、噎膈；2. 妇科系病症（冲脉主治）：月经不调（先期、后期、先后无定期）、痛经（寒凝血瘀、气滞血瘀、气血亏虚型）、崩漏（脾虚失摄、冲脉不固）、带下病（脾虚湿盛、冲任失调）、难产、产后恶露不尽、产后腹痛、乳少；3. 心系病症：心痛、胸闷、心悸（心脾两虚、气血不足型）；4. 津液代谢病症：脚气、水肿（脾虚水湿内停）、痰饮；5. 神志及其他：心烦失眠（心脾两虚）、梅核气、疝气、脱肛（脾虚气陷）'
+            },
+            '照海': {
+                '经脉归属': '足少阴肾经，八脉交会穴（通阴跷脉）',
+                '通脉类型': '通阴跷脉，阴跷脉主肢体阴侧濡养、睡眠、目睛开合',
+                '精确位置': '在足内侧，内踝尖下方1寸处的凹陷中；取穴时，正坐垂足或仰卧位，内踝尖垂直向下推，至骨面下缘凹陷处，按压有明显酸胀感，对应解剖位置为内踝下份，趾长屈肌腱外侧，胫后动脉与静脉附近，布有小腿内侧皮神经、胫神经分支',
+                '单独治证': '1. 头面咽喉系病症（核心主治）：咽喉肿痛（阴虚火旺、肺肾阴虚型）、咽干口燥、扁桃体炎、喉痹、梅核气、失音、头痛（肾虚头痛、阴虚头痛）、眩晕（肝肾阴虚、肝阳上亢型）、目赤肿痛、目涩、视物昏花；2. 神志系病症：失眠（心肾不交、阴虚火旺型，伴心烦、潮热、盗汗）、多梦、癫狂、痫证、焦虑、躁狂、嗜睡（阴跷脉失养）；3. 下焦系病症：月经不调、痛经、闭经、阴痒、阴挺、带下病、小便频数、癃闭、遗尿、遗精、早泄（肾虚不固）；4. 肠道病症：便秘（阴虚肠燥、津亏便秘）；5. 肢体及其他：脚气、下肢痿痹（肝肾阴虚、筋脉失养）、足跟痛（肾虚）、更年期综合征（烘热、汗出、心烦）'
+            },
+            '外关': {
+                '经脉归属': '手少阳三焦经，络穴，八脉交会穴（通阳维脉）',
+                '通脉类型': '通阳维脉，阳维脉主一身阳经维系，主外感寒热、肢体痹痛',
+                '精确位置': '在前臂后区，腕背横纹上2寸，尺骨与桡骨间隙中点；取穴时，伸臂俯掌，腕背横纹向上量3横指（约2寸），两骨之间凹陷处，按压有酸胀感，对应解剖位置为桡骨与尺骨之间，指伸肌与拇长伸肌之间，布有前臂背侧皮神经、桡神经深支，浅层为头静脉、贵要静脉吻合支，深层为骨间后动脉及静脉',
+                '单独治证': '1. 外感系病症：外感发热（风热感冒、少阳证寒热往来）、感冒、咳嗽（风热犯肺）；2. 头面五官系病症：头痛（少阳头痛、侧头痛，伴口苦、目眩）、目赤肿痛、目翳、耳鸣、耳聋（肝胆火旺、风热上扰）、咽喉肿痛、牙痛（风火牙痛）、痄腮；3. 肢体关节病症（核心主治）：肩背痛、肘臂屈伸不利、手腕疼痛、手指麻木、半身不遂（中风后遗症）、落枕、颈椎病（少阳经阻滞）、腰腿痛（少阳经循行部位）；4. 肝胆及三焦病症：胁肋胀痛（肝胆气滞、三焦气机不畅）、黄疸（肝胆湿热）；5. 其他：瘰疬、痰核、便秘（三焦气化不利）、手指拘挛'
+            },
+            '足临泣': {
+                '经脉归属': '足少阳胆经，输穴，八脉交会穴（通带脉）',
+                '通脉类型': '通带脉，带脉主约束诸经、固护胞胎，主腰腹、带下病症',
+                '精确位置': '在足背，第4、5跖骨底结合部的前方，第5趾长伸肌腱外侧凹陷处；取穴时，仰卧或正坐垂足，足背第4、5脚趾根部向上推，至跖骨结合部前方凹陷处，按压有酸胀感，对应解剖位置为跖骨间隙，趾长伸肌腱外侧，足背静脉网附近，布有足背中间皮神经、腓浅神经分支，浅层为足背静脉网，深层为足背动脉分支',
+                '单独治证': '1. 头面系病症：头痛（少阳头痛、巅顶痛）、眩晕（肝阳上亢、痰湿上蒙）、目赤肿痛、目涩、耳鸣、耳聋（肝胆火旺、痰火郁结）；2. 躯体及经络病症（核心主治）：胁肋胀痛（肝胆气滞、湿热蕴结）、腰腿痛（带脉阻滞、少阳经不通）、下肢痿痹、足背肿痛、膝关节炎（少阳经循行部位）、疝气；3. 妇科系病症（带脉主治）：月经不调、痛经（气滞血瘀、寒凝血瘀）、带下病（湿热带下、寒湿带下）、少腹疼痛；4. 外感及其他：疟疾、瘰疬、乳痈（初期，肝胆气滞）、惊风（小儿）、麦粒肿、面痛（三叉神经痛，少阳经型）'
+            },
+            '后溪': {
+                '经脉归属': '手太阳小肠经，输穴，八脉交会穴（通督脉）',
+                '通脉类型': '通督脉，督脉为阳脉之海，主脊柱、头项、神志病症',
+                '精确位置': '在手内侧，第5掌指关节尺侧近端赤白肉际凹陷中；取穴时，握拳，掌心向胸，第5掌指关节后缘，尺侧掌纹尽头，按压有明显酸胀感，对应解剖位置为第5掌骨小头后缘，小指展肌与小指屈肌之间，布有尺神经手背支、掌侧固有神经，浅层为手背静脉网，深层为掌背动脉',
+                '单独治证': '1. 头项脊柱病症（核心主治）：头痛（太阳头痛、后头痛）、项强、落枕、颈椎病（督脉阻滞、太阳经不通）、颈肩背痛、胸椎小关节紊乱、腰椎间盘突出（督脉失养）、强直性脊柱炎；2. 神志系病症：癫狂、痫证、失眠（心肾不交、督脉郁滞）、多梦、烦躁、惊风（小儿）；3. 肢体及经络病症：手指麻木、屈伸不利、肘臂挛痛、半身不遂（中风后遗症）、腕管综合征；4. 头面及肠腑病症：目赤肿痛、目翳、耳鸣、耳聋、疟疾、黄疸、泄泻、痢疾（小肠分清泌浊失常）；5. 其他：痔疮、脱肛（督脉气陷）、带状疱疹（沿脊柱分布）'
+            },
+            '内关': {
+                '经脉归属': '手厥阴心包经，络穴，八脉交会穴（通阴维脉）',
+                '通脉类型': '通阴维脉，阴维脉主一身阴经维系，主心胸、胃腑病症',
+                '精确位置': '在前臂前区，腕掌侧横纹上2寸，掌长肌腱与桡侧腕屈肌腱之间；取穴时，伸臂仰掌，腕横纹向上量3横指（约2寸），两肌腱之间凹陷处，按压有酸胀感，对应解剖位置为前臂正中，掌长肌腱与桡侧腕屈肌腱之间，正中神经附近，布有前臂内侧皮神经、正中神经分支，浅层为贵要静脉，深层为肱动脉分支、正中动脉',
+                '单独治证': '1. 心系病症（核心主治）：心痛、胸闷、心悸（心气不足、心阳不振、心血瘀阻、痰浊闭阻型）、心律不齐（早搏、房颤）、心绞痛、心肌梗死（缓解期）、心肌炎；2. 消化系病症：胃痛（肝胃不和、脾胃虚寒、气滞血瘀型）、胃胀、呕吐、呃逆（顽固性）、腹痛、腹泻、便秘、胃食管反流、功能性消化不良；3. 神志系病症：失眠（心脾两虚、阴虚火旺、痰热内扰型）、多梦、焦虑、抑郁、癫狂、痫证、癔症；4. 头面及其他：眩晕、偏头痛（痰浊上蒙、肝阳上亢）、肘臂挛痛、晕车晕船（和胃降逆）、孕吐、更年期综合征（心烦、心悸）'
+            },
+            '申脉': {
+                '经脉归属': '足太阳膀胱经，八脉交会穴（通阳跷脉）',
+                '通脉类型': '通阳跷脉，阳跷脉主肢体阳侧濡养、运动、睡眠',
+                '精确位置': '在足外侧，外踝尖下方1寸处的凹陷中；取穴时，正坐垂足或仰卧位，外踝尖垂直向下推，至骨面下缘凹陷处，按压有酸胀感，对应解剖位置为外踝下份，腓骨长短肌腱外侧，腓动脉与静脉分支附近，布有腓肠神经、足背外侧皮神经，浅层为小隐静脉，深层为腓动脉分支',
+                '单独治证': '1. 头面系病症：头痛（太阳头痛、后头痛，伴恶风）、眩晕（阳虚水泛、肝阳上亢型）、目赤肿痛、目涩、耳鸣、耳聋（外感风热、肝胆火旺）；2. 神志系病症：失眠（心肾不交、阳虚不眠，伴畏寒、肢冷）、多梦、癫狂、痫证、嗜睡（阳跷脉亢盛）、健忘；3. 肢体关节病症（核心主治）：腰腿痛（太阳经、阳跷脉阻滞）、下肢痿痹、足踝肿痛、行走不利、足跟痛（肾虚、寒湿痹阻）、膝关节炎、坐骨神经痛；4. 外感及其他：疟疾、眩晕欲仆（肝阳上亢）、脚气、中风后遗症（肢体偏废、行走不稳）、落枕（太阳经型）'
+            },
+            '列缺': {
+                '经脉归属': '手太阴肺经，络穴，八脉交会穴（通任脉）',
+                '通脉类型': '通任脉，任脉为阴脉之海，主胸腹、肺系、头项病症',
+                '精确位置': '在前臂，桡骨茎突上方，腕横纹上1.5寸，当肱桡肌与拇长展肌腱之间；取穴时，两手虎口交叉，一手食指按在另一手桡骨茎突上，食指尖下凹陷处即为穴位，对应解剖位置为桡骨茎突上方，拇长展肌腱与肱桡肌之间，桡动脉分支附近，布有前臂外侧皮神经、桡神经浅支，浅层为头静脉，深层为桡动脉及静脉分支',
+                '单独治证': '1. 肺系病症（核心主治）：咳嗽（风寒、风热、痰湿、肺阴虚型）、气喘、咳痰、咽喉肿痛、扁桃体炎、喉痹、失音、感冒（风寒、风热）、鼻渊（鼻炎、鼻窦炎，流清涕或黄涕）、鼻衄；2. 头项系病症：头痛（太阳头痛、项部头痛）、项强、落枕、颈椎病（任脉、肺经阻滞）、眩晕（气血不足、痰湿上蒙型）；3. 肢体及经络病症：手腕疼痛、手指麻木、屈伸不利、上肢痿痹（肺经气血不足）、肘臂挛痛；4. 下焦及其他：尿血、小便频数（肺失宣降、通调水道失常）、遗精、阳痿（气血不足）、牙痛（风火牙痛、胃火牙痛）、面瘫（风寒型）'
+            }
+        };
+
+        // 穴位配伍核心治证（完整内容，无任何省略）
+        const POINT_COMBINATION_TREATMENT = {
+            '公孙-内关': '【核心病机】冲脉与阴维脉相会，合治心胸胃腑病症，核心为气机阻滞、气血失调、脾胃失和、心脉不畅；【辨证要点】以心胸痞闷、胃脘胀痛、呕吐呃逆、心悸失眠为主要表现，舌象多为淡红或紫暗，脉象多弦、细、涩；【临床主治】1. 心系病症：顽固性心痛、胸闷、心悸、心律不齐（早搏、房颤）、心绞痛（缓解期），尤其适用于心脾两虚、气血瘀阻型，协同增效，增强宁心安神、理气活血止痛功效；2. 脾胃病症：慢性胃炎、胃溃疡、十二指肠溃疡、顽固性呕吐、呃逆、肠易激综合征、胃食管反流、功能性消化不良，健脾和胃、理气降逆，疗效优于单穴，对肝胃不和型胃痛特效；3. 妇科病症：原发性痛经、继发性痛经、月经不调、产后腹痛，调理冲任二脉、理气活血止痛，改善经期气血瘀滞所致的小腹坠胀、疼痛；4. 神志及其他：焦虑症、抑郁症（伴胃肠功能紊乱）、晕车晕船、孕吐（妊娠恶阻）、梅核气（痰气交阻型）；【现代应用】常用于消化内科、心内科、妇科常见病症，配合艾灸可增强温阳健脾、理气止痛效果',
+            '内关-公孙': '同「公孙-内关」配伍核心功效，冲脉与阴维脉合治心胸胃腑，此配伍以「内关通阴维脉主心胸」为侧重，核心功效为理气宽胸、宁心安神、和胃止痛；【辨证要点】以心胸憋闷、心悸怔忡、胃脘痞满、呕吐泛酸为主要表现，伴心烦、失眠、多梦，舌淡苔白腻，脉弦滑；【临床侧重】相较于公孙为主，本配伍更适合心胸症状突出者，如冠心病、心律不齐伴胃脘不适，或焦虑、失眠引发的胃肠功能紊乱，对痰浊闭阻心脉、肝胃不和型病症适配性更高',
+            '照海-列缺': '【核心病机】阴跷脉与任脉相会，合治肺肾阴虚、心肾不交、下焦湿热，核心为阴虚火旺、津液耗伤、经络阻滞；【辨证要点】以咽喉干痛、失眠多梦、眩晕耳鸣、小便频数为主要表现，舌干红少苔，脉细数；【临床主治】1. 咽喉系病症（核心特效）：急慢性咽喉炎、扁桃体炎、喉痹、咽干咽痛（阴虚火旺型，伴潮热、盗汗），滋阴润肺、利咽止痛，对西药效果不佳的慢性咽炎特效；2. 神志系病症：失眠（尤其心肾不交型，伴心烦、潮热、腰膝酸软）、多梦、焦虑、躁狂（阴虚型）、痫证（休止期）；3. 头项系病症：偏头痛（阴虚型）、颈椎病（颈肩酸痛伴咽干）、眩晕（肝肾阴虚、肝阳上亢型）；4. 下焦及其他：月经不调（阴虚血热型）、痛经（血瘀阴虚型）、阴痒（下焦湿热型）、小便频数（肾虚不固）、便秘（阴虚肠燥型）、更年期综合征（烘热、汗出、心烦、咽干）；【现代应用】常用于耳鼻喉科、神经内科、妇科更年期病症，配合太溪、三阴交艾灸可增强滋阴补肾效果',
+            '列缺-照海': '同「照海-列缺」配伍核心功效，任脉与阴跷脉合治肺肾、心胸、下焦，此配伍以「列缺通任脉主肺系」为侧重，核心功效为宣肺解表、滋阴益肾、利咽开窍；【辨证要点】以咳嗽咽痒、咽喉肿痛、头痛项强、眩晕耳鸣为主要表现，伴鼻塞、流涕（阴虚型感冒），舌淡红少津，脉浮细数；【临床侧重】相较于照海为主，本配伍更适合肺系症状突出者，如阴虚感冒伴咽喉肿痛、慢性支气管炎（肺肾阴虚型）、过敏性鼻炎（肺肾两虚型），对外感风热后期、余热未清所致的咽干、咳嗽适配性更高',
+            '外关-足临泣': '【核心病机】阳维脉与带脉相会，合治少阳经阻滞、肝胆气滞、痰湿郁结，核心为气机不畅、经络阻滞、痰瘀互结；【辨证要点】以侧头痛、胁肋胀痛、肢体痹痛、耳鸣耳聋为主要表现，舌淡红或紫暗，苔白腻或黄腻，脉弦或弦滑；【临床主治】1. 头面系病症（核心特效）：偏头痛（少阳经型，伴口苦、目眩）、眩晕（肝阳上亢、痰湿上蒙型）、耳鸣、耳聋（肝胆火旺、痰火郁结型）、目赤肿痛、痄腮、麦粒肿；2. 躯体系病症：胁肋胀痛（肝炎、胆囊炎、肋间神经痛）、腰腿痛（带脉阻滞、少阳经不通）、足背肿痛、膝关节炎、落枕（少阳经型）；3. 外感及其他：外感发热（少阳证寒热往来）、疟疾、瘰疬、痰核、乳痈初期（肝胆气滞型）、带状疱疹（沿少阳经分布）；【现代应用】常用于神经内科、肝胆外科、骨科常见病症，配合太冲、阳陵泉可增强疏肝利胆、通络止痛效果',
+            '足临泣-外关': '同「外关-足临泣」配伍核心功效，阳维脉与带脉合治少阳、肝胆、带脉，此配伍以「足临泣通带脉主腰腹、妇科」为侧重，核心功效为疏肝利胆、通络止痛、固护带脉；【辨证要点】以胁肋胀痛、腰腹疼痛、月经不调、带下病为主要表现，伴口苦、咽干、肢体麻木，舌暗苔腻，脉弦涩；【临床侧重】相较于外关为主，本配伍更适合腰腹、妇科症状突出者，如慢性盆腔炎、附件炎、痛经（气滞血瘀型）、腰间盘突出（少阳经、带脉阻滞）、带状疱疹（腰腹部），对带脉失调所致的带下量多、腰腹坠胀适配性更高',
+            '后溪-申脉': '【核心病机】督脉与阳跷脉相会，合治督脉阻滞、太阳经不通、阳跷脉失养，核心为经络瘀阻、阳气不足、筋脉失濡；【辨证要点】以头项强痛、颈肩背痛、肢体痿痹、失眠嗜睡为主要表现，舌淡红或紫暗，苔白，脉弦或沉迟；【临床主治】1. 头项脊柱病症（核心特效）：颈椎病、落枕、颈肩背痛、胸椎小关节紊乱、腰椎间盘突出、强直性脊柱炎，疏通督脉与阳跷脉，通络止痛效果显著，为针灸治疗颈腰椎病的经典配伍；2. 神志系病症：癫狂、痫证（发作期及休止期）、顽固性失眠（阳虚型，伴畏寒、肢冷）、嗜睡（阳跷脉亢盛）、惊风（小儿）；3. 肢体系病症：手指麻木、肘臂挛痛、半身不遂（中风后遗症，肢体偏废）、足踝肿痛、行走不利；4. 其他：目赤肿痛、耳鸣、耳聋（外感风寒型）、疟疾、痔疮（督脉气陷）；【现代应用】常用于骨科、康复科、神经内科常见病症，配合艾灸大椎、命门可增强温阳通络、益肾壮骨效果',
+            '申脉-后溪': '同「后溪-申脉」配伍核心功效，阳跷脉与督脉合治头项、脊柱、神志，此配伍以「申脉通阳跷脉主肢体运动、睡眠」为侧重，核心功效为醒脑开窍、通络止痛、调和睡眠；【辨证要点】以眩晕欲仆、行走不稳、肢体麻木、失眠嗜睡为主要表现，伴颈肩酸痛、足跟痛，舌淡苔白，脉沉细；【临床侧重】相较于后溪为主，本配伍更适合肢体运动、睡眠症状突出者，如中风后遗症（行走不稳、肢体麻木）、共济失调、失眠（阳虚不眠）、嗜睡、眩晕（阳虚水泛型）、足跟痛（肾虚寒湿型），对阳跷脉失养所致的肢体活动不利适配性更高'
+        };
+
+        // ===================== 缓存常用DOM元素 =====================
+        const tabBtns = document.querySelectorAll('.function-tab');
+        const formSections = document.querySelectorAll('.form-section');
+        const resultArea = document.getElementById('result-area');
+        const singleResult = document.getElementById('single-result');
+        const fullDayResult = document.getElementById('full-day-result');
+        const autoCalcBtn = document.getElementById('auto-calc-btn');
+        const manualCalcBtn = document.getElementById('manual-calc-btn');
+        const fullDayCalcBtn = document.getElementById('full-day-calc-btn');
+
+        // ===================== 页面初始化 =====================
+        window.onload = function() {
+            const now = new Date();
+            const currentDatetime = now.toISOString().slice(0, 16); // 适配datetime-local
+            const currentDate = now.toISOString().slice(0, 10);     // 适配date
+            document.getElementById('manual-datetime').value = currentDatetime;
+            document.getElementById('full-day-date').value = currentDate;
+            // 绑定选项卡切换事件
+            bindTabEvent();
+        };
+
+        // ===================== 基础工具函数 =====================
+        // 格式化日期时间
+        function formatDateTime(date) {
+            const pad = n => String(n).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+        }
+        // 格式化日期
+        function formatDate(date) {
+            const pad = n => String(n).padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+        }
+        // 获取干支对应的代数
+        function getGanZhiNum(ganZhiChar, numMap) {
+            for (const [num, chars] of Object.entries(numMap)) {
+                if (chars.has(ganZhiChar)) return parseInt(num);
+            }
+            throw new Error(`未找到干支「${ganZhiChar}」对应的代数`);
+        }
+        // 计算真太阳时（核心：经度每差1°，时间差4分钟）
+        function calculateTrueSolarTime(beijingTime, longitude = 120.0) {
+            const timeDiffMinutes = (longitude - 120.0) * 4; // 核心换算公式
+            const trueSolarTime = new Date(beijingTime.getTime() + timeDiffMinutes * 60 * 1000);
+            let timeDiffDesc = '与北京时间一致';
+            if (timeDiffMinutes > 0) timeDiffDesc = `比北京时间快${Math.round(timeDiffMinutes)}分钟`;
+            else if (timeDiffMinutes < 0) timeDiffDesc = `比北京时间慢${Math.round(Math.abs(timeDiffMinutes))}分钟`;
+            return { trueSolarTime, longitude, timeDiff: Math.round(timeDiffMinutes), timeDiffDesc };
+        }
+        // 获取日干支
+        function getRiGanZhi(inputDateTime) {
+            const baseDate = new Date(2025, 11, 30); // 基准干支日期（已校准）
+            const dayDiff = Math.floor((inputDateTime - baseDate) / (1000 * 60 * 60 * 24));
+            const riGanIdx = (9 + dayDiff) % 10;
+            const riZhiIdx = (9 + dayDiff) % 12;
+            const finalGanIdx = riGanIdx < 0 ? riGanIdx + 10 : riGanIdx;
+            const finalZhiIdx = riZhiIdx < 0 ? riZhiIdx + 12 : riZhiIdx;
+            const riGan = STANDARD_TIAN_GAN[finalGanIdx];
+            const riZhi = STANDARD_DI_ZHI[finalZhiIdx];
+            return { riGan, riZhi, riGanZhi: riGan + riZhi };
+        }
+        // 获取时干支+当前时辰
+        function getShiGanZhi(riGan, trueSolarDatetime) {
+            const totalHour = trueSolarDatetime.getHours() + trueSolarDatetime.getMinutes() / 60.0;
+            let shiChenName = '', shiZhi = '', shiStart = 0, shiEnd = 0;
+            // 匹配当前时辰
+            for (const [name, start, end] of SHI_CHEN_CONFIG) {
+                if ((start <= totalHour && totalHour < end) || (start === 23 && totalHour >= 23)) {
+                    [shiChenName, shiStart, shiEnd] = [name, start, end];
+                    shiZhi = STANDARD_DI_ZHI[SHI_CHEN_CONFIG.findIndex(item => item[0] === name)];
+                    break;
+                }
+            }
+            // 五虎遁法求时干
+            const wuShuDunMap = { '甲':0, '己':0, '乙':2, '庚':2, '丙':4, '辛':4, '丁':6, '壬':6, '戊':8, '癸':8 };
+            const startIdx = wuShuDunMap[riGan];
+            const shiGanIdx = (startIdx + STANDARD_DI_ZHI.indexOf(shiZhi)) % 10;
+            const shiGan = STANDARD_TIAN_GAN[shiGanIdx];
+            return {
+                shiGan, shiZhi, shiGanZhi: shiGan + shiZhi,
+                shiChenName, shiStart, shiEnd,
+                shiTimeDesc: `${shiStart.toString().padStart(2, '0')}:00-${shiEnd.toString().padStart(2, '0')}:00`
+            };
+        }
+        // 计算总代数（日干+日干+时干+时支）
+        function calculateTotalDaiShu(riGan, riZhi, shiGan, shiZhi) {
+            const riGanDs = getGanZhiNum(riGan, RI_GAN_ZHI_NUM);
+            const riZhiDs = getGanZhiNum(riZhi, RI_GAN_ZHI_NUM);
+            const shiGanDs = getGanZhiNum(shiGan, SHI_GAN_ZHI_NUM);
+            const shiZhiDs = getGanZhiNum(shiZhi, SHI_GAN_ZHI_NUM);
+            return { riGanDs, riZhiDs, shiGanDs, shiZhiDs, totalDs: riGanDs + riZhiDs + shiGanDs + shiZhiDs };
+        }
+        // 根据余数+阳阴日+性别匹配主客穴
+        function getRemainderAndPoint(totalDs, riGan, gender = '男') {
+            const isYangRi = YANG_RI_GAN.includes(riGan);
+            let remainder = isYangRi ? totalDs % 9 : totalDs % 6; // 阳日除9，阴日除6
+            remainder = remainder === 0 ? (isYangRi ? 9 : 6) : remainder; // 余数为0则取9/6
+
+            // 余数5特殊规则：男取照海-列缺，女取内关-公孙
+            if (remainder === 5) {
+                return gender === '男' 
+                    ? { remainder, mainPoint: '照海', mainChannel: '通阴跷脉', guestPoint: '列缺', guestChannel: '通任脉' }
+                    : { remainder, mainPoint: '内关', mainChannel: '通阴维脉', guestPoint: '公孙', guestChannel: '通冲脉' };
+            }
+            // 常规余数匹配主客穴
+            const [mainPoint, mainChannel, guestPoint] = NUM_TO_POINT[remainder];
+            const guestChannel = POINT_CHANNEL_MAP[guestPoint];
+            return { remainder, mainPoint, mainChannel, guestPoint, guestChannel };
+        }
+        // 验证经度合法性
+        function validateLongitude(lonStr) {
+            const lon = parseFloat(lonStr);
+            if (isNaN(lon) || lon < 73.0 || lon > 135.0) {
+                alert('请输入合法的中国境内经度（73.0-135.0，保留两位小数）！');
+                return false;
+            }
+            return lon;
+        }
+        // 设置按钮加载状态
+        function setLoadingState(btn, isLoading) {
+            btn.disabled = isLoading;
+            isLoading ? btn.classList.add('loading') : btn.classList.remove('loading');
+        }
+        // 绑定穴位折叠/展开事件
+        function bindPointToggleEvent() {
+            document.querySelectorAll('.point-header').forEach(header => {
+                const toggleBtn = header.querySelector('.toggle-btn');
+                const content = header.nextElementSibling;
+                header.addEventListener('click', () => {
+                    content.classList.toggle('show');
+                    toggleBtn.classList.toggle('rotate');
+                });
+            });
+        }
+        // 绑定选项卡切换事件
+        function bindTabEvent() {
+            tabBtns.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabBtns.forEach(t => t.classList.remove('active'));
+                    formSections.forEach(s => s.classList.remove('active'));
+                    tab.classList.add('active');
+                    const tabId = tab.dataset.tab;
+                    document.getElementById(`${tabId}-form`).classList.add('active');
+                    // 切换选项卡隐藏结果
+                    resultArea.style.display = 'none';
+                    singleResult.style.display = 'none';
+                    fullDayResult.style.display = 'none';
+                });
+            });
+        }
+
+        // ===================== 灵龟八法核心计算函数 =====================
+        function lingGuiBaFaCore(inputDatetime = new Date(), gender = '男', longitude = 120.0) {
+            try {
+                // 1. 计算真太阳时
+                const { trueSolarTime, longitude: lon, timeDiffDesc } = calculateTrueSolarTime(inputDatetime, longitude);
+                // 2. 获取日干支
+                const { riGan, riZhi, riGanZhi } = getRiGanZhi(trueSolarTime);
+                // 3. 获取时干支+当前时辰
+                const { shiGan, shiZhi, shiGanZhi, shiChenName, shiStart, shiEnd, shiTimeDesc } = getShiGanZhi(riGan, trueSolarTime);
+                // 4. 计算总代数
+                const { totalDs } = calculateTotalDaiShu(riGan, riZhi, shiGan, shiZhi);
+                // 5. 计算余数并匹配主客穴
+                const { remainder, mainPoint, mainChannel, guestPoint, guestChannel } = getRemainderAndPoint(totalDs, riGan, gender);
+                // 6. 获取主穴/配穴完整信息
+                const mainPointInfo = POINT_DETAIL[mainPoint] || { '经脉归属': '暂无', '精确位置': '暂无', '单独治证': '暂无' };
+                const guestPointInfo = POINT_DETAIL[guestPoint] || { '经脉归属': '暂无', '精确位置': '暂无', '单独治证': '暂无' };
+                // 7. 获取配伍核心治证
+                const combinationKey1 = `${mainPoint}-${guestPoint}`;
+                const combinationKey2 = `${guestPoint}-${mainPoint}`;
+                const combinationTreatment = POINT_COMBINATION_TREATMENT[combinationKey1] || POINT_COMBINATION_TREATMENT[combinationKey2] || '暂无明确配伍治证记载';
+                // 8. 判定阳阴日
+                const isYangRi = YANG_RI_GAN.includes(riGan);
+                const riType = isYangRi ? '阳日' : '阴日';
+                // 返回完整计算结果
+                return {
+                    '原始北京时间': formatDateTime(inputDatetime),
+                    '真太阳时': formatDateTime(trueSolarTime),
+                    '真太阳时时差': timeDiffDesc,
+                    '当地经度': `${lon}°E`,
+                    '日干支': riGanZhi,
+                    '时干支': shiGanZhi,
+                    '时辰': shiChenName,
+                    '时辰时间段': shiTimeDesc,
+                    '日期类型': riType,
+                    '总代数': totalDs,
+                    '余数': remainder,
+                    '主穴': mainPoint,
+                    '主穴经脉': mainChannel,
+                    '主穴经脉归属': mainPointInfo['经脉归属'],
+                    '主穴精确位置': mainPointInfo['精确位置'],
+                    '主穴单独治证': mainPointInfo['单独治证'],
+                    '配穴': guestPoint,
+                    '配穴经脉': guestChannel,
+                    '配穴经脉归属': guestPointInfo['经脉归属'],
+                    '配穴精确位置': guestPointInfo['精确位置'],
+                    '配穴单独治证': guestPointInfo['单独治证'],
+                    '配伍治证': combinationTreatment,
+                    '下针顺序': `先针${mainPoint}，后针${guestPoint}`
+                };
+            } catch (e) {
+                throw new Error(`计算失败：${e.message}`);
+            }
+        }
+
+        // ===================== 全天12时辰批量计算函数 =====================
+        function calculateFullDay12ShichenPoints(targetDate = new Date(), gender = '男', longitude = 120.0) {
+            const targetDateStr = formatDate(targetDate);
+            const fullDayPoints = [];
+            // 遍历12时辰，每个时辰取中间时间计算
+            SHI_CHEN_CONFIG.forEach(([shiChenName, shiStart]) => {
+                let shiDatetime;
+                // 子时特殊处理（跨天，23:30）
+                if (shiStart === 23) {
+                    shiDatetime = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), 23, 30);
+                } else {
+                    shiDatetime = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate(), shiStart + 1, 0);
+                }
+                // 调用核心计算函数，获取当前时辰穴位信息
+                const shiPointInfo = lingGuiBaFaCore(shiDatetime, gender, longitude);
+                fullDayPoints.push({
+                    '目标日期': targetDateStr,
+                    '时辰': shiChenName,
+                    '时间段': shiPointInfo['时辰时间段'],
+                    '时干支': shiPointInfo['时干支'],
+                    '日干支': shiPointInfo['日干支'],
+                    '日期类型': shiPointInfo['日期类型'],
+                    '主穴': shiPointInfo['主穴'],
+                    '主穴经脉': shiPointInfo['主穴经脉'],
+                    '配穴（客穴）': shiPointInfo['配穴'],
+                    '配穴经脉': shiPointInfo['配穴经脉'],
+                    '下针顺序': shiPointInfo['下针顺序'],
+                    '主穴单独治证': shiPointInfo['主穴单独治证'],
+                    '配穴单独治证': shiPointInfo['配穴单独治证'],
+                    '配伍治证': shiPointInfo['配伍治证']
+                });
+            });
+            return fullDayPoints;
+        }
+
+        // ===================== 结果渲染函数 =====================
+        // 渲染单时间点计算结果
+        function displaySingleResult(result) {
+            singleResult.innerHTML = `
+                <div class="result-card">
+                    <div class="result-title">基础计算信息</div>
+                    <div class="result-info">
+                        <div class="info-item"><span class="info-label">原始北京时间</span><span class="info-value">${result['原始北京时间']}</span></div>
+                        <div class="info-item"><span class="info-label">真太阳时</span><span class="info-value">${result['真太阳时']}</span></div>
+                        <div class="info-item"><span class="info-label">真太阳时时差</span><span class="info-value">${result['真太阳时时差']}</span></div>
+                        <div class="info-item"><span class="info-label">当地经度</span><span class="info-value">${result['当地经度']}</span></div>
+                        <div class="info-item"><span class="info-label">日干支</span><span class="info-value">${result['日干支']}</span></div>
+                        <div class="info-item"><span class="info-label">时干支</span><span class="info-value">${result['时干支']}</span></div>
+                        <div class="info-item"><span class="info-label">当前时辰</span><span class="info-value">${result['时辰']} ${result['时辰时间段']}</span></div>
+                        <div class="info-item"><span class="info-label">日期类型</span><span class="info-value">${result['日期类型']}</span></div>
+                        <div class="info-item"><span class="info-label">总代数</span><span class="info-value">${result['总代数']}</span></div>
+                        <div class="info-item"><span class="info-label">计算余数</span><span class="info-value">${result['余数']}</span></div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="result-title">主穴信息</div>
+                    <div class="point-detail">
+                        <div class="point-header">
+                            <div class="point-name">${result['主穴']} - ${result['主穴经脉']}（${result['主穴经脉归属']}）</div>
+                            <div class="toggle-btn">▼</div>
+                        </div>
+                        <div class="point-content show">
+                            <p><strong>精确位置：</strong>${result['主穴精确位置']}</p>
+                            <p><strong>单独治证：</strong>${result['主穴单独治证']}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="result-title">配穴（客穴）信息</div>
+                    <div class="point-detail">
+                        <div class="point-header">
+                            <div class="point-name">${result['配穴']} - ${result['配穴经脉']}（${result['配穴经脉归属']}）</div>
+                            <div class="toggle-btn">▼</div>
+                        </div>
+                        <div class="point-content show">
+                            <p><strong>精确位置：</strong>${result['配穴精确位置']}</p>
+                            <p><strong>单独治证：</strong>${result['配穴单独治证']}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <div class="result-title">主客穴配伍应用</div>
+                    <div class="point-detail">
+                        <div class="point-header">
+                            <div class="point-name">${result['主穴']}-${result['配穴']} 经典配伍组合（八脉交会穴核心配伍）</div>
+                            <div class="toggle-btn">▼</div>
+                        </div>
+                        <div class="point-content show">
+                            <p><strong>下针及艾灸建议：</strong>${result['下针顺序']}</p>
+                            <p><strong>配伍核心治证：</strong>${result['配伍治证']}</p>
+                            <div class="compatibility-tip">💡 灵龟八法核心精髓：主客穴配伍使用，循八脉交会之理，协同增效，远胜单穴施治；临床可根据证型配伍其他穴位，虚寒证加艾灸，实热证加刺络放血，辨证施术方为上策</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            bindPointToggleEvent();
+            singleResult.style.display = 'block';
+            fullDayResult.style.display = 'none';
+            resultArea.style.display = 'block';
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' }); // 平滑滚动到结果
+        }
+
+        // 渲染全天12时辰计算结果（完整治证）
+        function displayFullDayResult(fullDayPoints) {
+            if (fullDayPoints.length === 0) {
+                fullDayResult.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">暂无计算数据，请检查输入后重新计算</p>';
+                fullDayResult.style.display = 'block';
+                return;
+            }
+            // 渲染12时辰穴位简表
+            // 替换 displayFullDayResult 函数中的 tableHtml 表格结构部分
+            let tableHtml = `
+                <div class="result-title">${fullDayPoints[0]['目标日期']} ${fullDayPoints[0]['日干支']}日（${fullDayPoints[0]['日期类型']}）全天12时辰主客穴位简表</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>时间段</th>
+                                <th>时干支</th>
+                                <th>主穴</th>
+                                <th>主穴经脉</th>
+                                <th>配穴</th>
+                                <th>配穴经脉</th>
+                                <th>下针建议</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            fullDayPoints.forEach(point => {
+                tableHtml += `
+                    <tr>
+                        <td>${point['时间段']}</td>
+                        <td>${point['时干支']}</td>
+                        <td>${point['主穴']}</td>
+                        <td>${point['主穴经脉']}</td>
+                        <td>${point['配穴（客穴）']}</td>
+                        <td>${point['配穴经脉']}</td>
+                        <td>${point['下针顺序']}</td>
+                    </tr>
+                `;
+            });
+            tableHtml += `</tbody></table></div>`;
+
+            // 渲染12时辰完整治证信息（默认折叠）
+            let detailHtml = '<div class="result-title" style="margin-top:30px;">各时辰完整治证信息（点击展开/折叠）</div>';
+            fullDayPoints.forEach(point => {
+                detailHtml += `
+                    <div class="point-detail">
+                        <div class="point-header">
+                            <div class="point-name">${point['时辰']}（${point['时间段']}）| ${point['主穴']}-${point['配穴（客穴）']}（${point['主穴经脉']}-${point['配穴经脉']}）</div>
+                            <div class="toggle-btn">▼</div>
+                        </div>
+                        <div class="point-content">
+                            <p><strong>一、主穴完整治证：</strong>${point['主穴单独治证']}</p>
+                            <p><strong>二、配穴完整治证：</strong>${point['配穴单独治证']}</p>
+                            <p><strong>三、配伍核心治证：</strong>${point['配伍治证']}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            fullDayResult.innerHTML = tableHtml + detailHtml;
+            bindPointToggleEvent();
+            fullDayResult.style.display = 'block';
+            singleResult.style.display = 'none';
+            resultArea.style.display = 'block';
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ===================== 表单重置函数 =====================
+        function resetForm(formType) {
+            const form = document.getElementById(`${formType}-form`);
+            form.querySelectorAll('input').forEach(input => {
+                if (input.type === 'number') {
+                    input.value = 120.0; // 经度重置为默认值
+                } else if (input.type === 'datetime-local') {
+                    input.value = new Date().toISOString().slice(0,16);
+                } else if (input.type === 'date') {
+                    input.value = new Date().toISOString().slice(0,10);
+                }
+            });
+            // 重置性别为男
+            form.querySelector('select').value = '男';
+            // 隐藏结果
+            resultArea.style.display = 'none';
+            singleResult.style.display = 'none';
+            fullDayResult.style.display = 'none';
+        }
+
+        // ===================== 计算入口函数（供按钮调用）=====================
+        // 1. 自动计算（当前时间）
+        function calculateAuto() {
+            try {
+                const gender = document.getElementById('auto-gender').value;
+                const lon = validateLongitude(document.getElementById('auto-longitude').value);
+                if (!lon) return;
+                setLoadingState(autoCalcBtn, true);
+                const result = lingGuiBaFaCore(new Date(), gender, lon);
+                // 模拟加载，提升体验
+                setTimeout(() => {
+                    displaySingleResult(result);
+                    setLoadingState(autoCalcBtn, false);
+                }, 300);
+            } catch (e) {
+                setLoadingState(autoCalcBtn, false);
+                alert(`计算出错：${e.message}`);
+            }
+        }
+
+        // 2. 手动输入时间计算
+        function calculateManual() {
+            try {
+                const datetimeInput = document.getElementById('manual-datetime').value;
+                if (!datetimeInput) {
+                    alert('请选择计算时间！');
+                    return;
+                }
+                const inputDatetime = new Date(datetimeInput.replace('T', ' '));
+                if (isNaN(inputDatetime.getTime())) {
+                    alert('时间格式错误，请重新选择！');
+                    return;
+                }
+                const gender = document.getElementById('manual-gender').value;
+                const lon = validateLongitude(document.getElementById('manual-longitude').value);
+                if (!lon) return;
+                setLoadingState(manualCalcBtn, true);
+                const result = lingGuiBaFaCore(inputDatetime, gender, lon);
+                setTimeout(() => {
+                    displaySingleResult(result);
+                    setLoadingState(manualCalcBtn, false);
+                }, 300);
+            } catch (e) {
+                setLoadingState(manualCalcBtn, false);
+                alert(`计算出错：${e.message}`);
+            }
+        }
+
+        // 3. 全天12时辰计算
+        function calculateFullDay() {
+            try {
+                const dateInput = document.getElementById('full-day-date').value;
+                if (!dateInput) {
+                    alert('请选择目标日期！');
+                    return;
+                }
+                const targetDate = new Date(dateInput);
+                if (isNaN(targetDate.getTime())) {
+                    alert('日期格式错误，请重新选择！');
+                    return;
+                }
+                const gender = document.getElementById('full-day-gender').value;
+                const lon = validateLongitude(document.getElementById('full-day-longitude').value);
+                if (!lon) return;
+                setLoadingState(fullDayCalcBtn, true);
+                const fullDayPoints = calculateFullDay12ShichenPoints(targetDate, gender, lon);
+                setTimeout(() => {
+                    displayFullDayResult(fullDayPoints);
+                    setLoadingState(fullDayCalcBtn, false);
+                }, 500);
+            } catch (e) {
+                setLoadingState(fullDayCalcBtn, false);
+                alert(`计算出错：${e.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

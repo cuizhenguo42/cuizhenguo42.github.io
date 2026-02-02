@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>培元九宫穴治疗男科妇科方案</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .nav-tabs {
+            margin-bottom: 20px;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .table-responsive {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .tab-content {
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="mb-4">
+            <a href="index.html" class="btn btn-outline-primary">← 返回数据导入</a>
+            <h2 class="d-inline-block ms-3">培元九宫穴治疗男科妇科方案（下焦靶向版）</h2>
+        </nav>
+
+        <!-- 选项卡（新增治证说明按钮） -->
+        <ul class="nav nav-tabs" id="schemeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="acupoint-tab" data-bs-toggle="tab" data-bs-target="#acupoint" type="button" role="tab">穴位定位</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="operation-tab" data-bs-toggle="tab" data-bs-target="#operation" type="button" role="tab">针刺流程</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="luoshu-tab" data-bs-toggle="tab" data-bs-target="#luoshu" type="button" role="tab">洛书数行针</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="course-tab" data-bs-toggle="tab" data-bs-target="#course" type="button" role="tab">疗程与禁忌</button>
+            </li>
+            <!-- 新增：治证说明选项卡 -->
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="treatment-tab" data-bs-toggle="tab" data-bs-target="#treatment" type="button" role="tab">治证说明</button>
+            </li>
+        </ul>
+
+        <!-- 选项卡内容 -->
+        <div class="tab-content" id="schemeTabsContent">
+            <!-- 1. 穴位定位（原有） -->
+            <div class="tab-pane fade show active" id="acupoint" role="tabpanel">
+                <h4 class="mb-3">九宫方位-穴位对应表</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>九宫方位</th>
+                                <th>对应穴位</th>
+                                <th>精准定位</th>
+                                <th>穴位归属</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>中宫</td><td>关元</td><td>脐下3寸，前正中线上</td><td>任脉</td></tr>
+                            <tr><td>乾宫</td><td>气海</td><td>脐下1.5寸，前正中线上</td><td>任脉</td></tr>
+                            <tr><td>坤宫</td><td>中极</td><td>脐下4寸，前正中线上</td><td>任脉</td></tr>
+                            <tr><td>巽宫</td><td>大巨（左）</td><td>脐下2寸，前正中线旁开2寸</td><td>足阳明胃经</td></tr>
+                            <tr><td>兑宫</td><td>大巨（右）</td><td>脐下2寸，前正中线旁开2寸</td><td>足阳明胃经</td></tr>
+                            <tr><td>坎宫</td><td>胞门（左）</td><td>脐下3寸（关元水平），前正中线旁开2寸</td><td>经外奇穴</td></tr>
+                            <tr><td>离宫</td><td>子户（右）</td><td>脐下3寸（关元水平），前正中线旁开2寸</td><td>经外奇穴</td></tr>
+                            <tr><td>艮宫</td><td>子宫穴（左）</td><td>脐下4寸（中极水平），前正中线旁开3寸</td><td>经外奇穴</td></tr>
+                            <tr><td>震宫</td><td>子宫穴（右）</td><td>脐下4寸（中极水平），前正中线旁开3寸</td><td>经外奇穴</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. 针刺流程（原有） -->
+            <div class="tab-pane fade" id="operation" role="tabpanel">
+                <h4 class="mb-3">标准化针刺操作流程</h4>
+                <h5>一、术前准备</h5>
+                <ul>
+                    <li>体位：患者仰卧位，腹部放松，暴露脐下至耻骨联合区域</li>
+                    <li>排空小便：必须执行，防止针刺关元/中极时误伤膀胱</li>
+                    <li>消毒：75%酒精棉球环形擦拭穴位，直径≥5cm</li>
+                    <li>针具：0.30mm×40mm（常规体型）/50mm（肥胖体型）不锈钢毫针</li>
+                </ul>
+
+                <h5>二、针刺顺序与操作</h5>
+                <div class="table-responsive mb-3">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>操作步骤</th>
+                                <th>穴位</th>
+                                <th>进针角度/深度</th>
+                                <th>针感要求（男/女）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>第一步（核心三宫）</td><td>中宫（关元）</td><td>向下斜刺30°，25-35mm</td><td>男：放射至阴茎头部；女：尿道口周围</td></tr>
+                            <tr><td>第一步（核心三宫）</td><td>乾宫（气海）</td><td>直刺，20-30mm</td><td>脐周酸胀，可扩散至全腹</td></tr>
+                            <tr><td>第一步（核心三宫）</td><td>坤宫（中极）</td><td>向下斜刺30°，25-35mm</td><td>男：放射至阴茎头部；女：阴道口周围</td></tr>
+                            <tr><td>第二步（剩余六宫）</td><td>坎宫（左胞门）/离宫（右子户）</td><td>直刺（略向中线），25-30mm</td><td>腹股沟酸胀</td></tr>
+                            <tr><td>第二步（剩余六宫）</td><td>巽宫（左大巨）/兑宫（右大巨）</td><td>直刺，30-35mm</td><td>男：传至睾丸部；女：腹股沟韧带下</td></tr>
+                            <tr><td>第二步（剩余六宫）</td><td>艮宫（左子宫）/震宫（右子宫）</td><td>向前列腺/子宫斜刺45°，30-40mm</td><td>男：放散至阴茎部；女：下腹部深处</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5>三、留针与出针</h5>
+                <ul>
+                    <li>留针：20-30分钟，每10分钟重复对应洛书数行针</li>
+                    <li>出针：反向顺序（震宫→艮宫→...→中宫），干棉球按压针孔1分钟</li>
+                </ul>
+            </div>
+
+            <!-- 3. 洛书数行针（原有） -->
+            <div class="tab-pane fade" id="luoshu" role="tabpanel">
+                <h4 class="mb-3">洛书九宫数行针规范（捻转补法）</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>九宫方位</th>
+                                <th>洛书数</th>
+                                <th>行针次数（顺时针捻转）</th>
+                                <th>对应穴位</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>离宫</td><td>9</td><td>9次</td><td>子户（右）</td></tr>
+                            <tr><td>坎宫</td><td>1</td><td>1次</td><td>胞门（左）</td></tr>
+                            <tr><td>震宫</td><td>3</td><td>3次</td><td>子宫穴（右）</td></tr>
+                            <tr><td>兑宫</td><td>7</td><td>7次</td><td>大巨（右）</td></tr>
+                            <tr><td>坤宫</td><td>2</td><td>2次</td><td>中极</td></tr>
+                            <tr><td>巽宫</td><td>4</td><td>4次</td><td>大巨（左）</td></tr>
+                            <tr><td>乾宫</td><td>6</td><td>6次</td><td>气海</td></tr>
+                            <tr><td>艮宫</td><td>8</td><td>8次</td><td>子宫穴（左）</td></tr>
+                            <tr><td>中宫</td><td>5</td><td>5次</td><td>关元</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info">
+                    <strong>核心原则</strong>：戴九履一，左三右七，二四为肩，六八为足，而五居中（顺时针捻转补法，角度≤90°，频率60次/分钟）。
+                </div>
+            </div>
+
+            <!-- 4. 疗程与禁忌（原有） -->
+            <div class="tab-pane fade" id="course" role="tabpanel">
+                <h4 class="mb-3">疗程设置</h4>
+                <ul>
+                    <li>10次为1个疗程，每周治疗5次</li>
+                    <li>连续治疗6个疗程（共2个月），疗程间无需休息</li>
+                    <li>显效标准：临床症状（尿频、尿急、腰膝酸软等）基本消失，针感传导顺畅</li>
+                </ul>
+
+                <h4 class="mb-3">禁忌说明</h4>
+                <div class="warning-box">
+                    <h5>绝对禁忌</h5>
+                    <ul>
+                        <li>急性生殖泌尿系统炎症（急性前列腺炎、尿道炎）、腹部皮肤溃疡/感染</li>
+                        <li>出血倾向、孕妇（关元/中极/子宫穴为孕妇禁针穴）</li>
+                        <li>过度饥饿、疲劳、醉酒者（防止晕针）</li>
+                    </ul>
+                    <h5 class="mt-2">相对禁忌</h5>
+                    <ul>
+                        <li>体型消瘦者浅刺，避免刺伤腹壁动脉</li>
+                        <li>晕针反应：立即停针，平卧饮温水，严重者针刺人中/内关</li>
+                    </ul>
+                </div>
+
+                <h4 class="mb-3">术后护理</h4>
+                <ul>
+                    <li>针刺后2小时内禁止洗冷水澡，避免腹部受凉</li>
+                    <li>饮食忌生冷、辛辣、油腻，忌烟酒</li>
+                    <li>治疗期间避免性生活，减少下焦气血耗损</li>
+                </ul>
+            </div>
+
+            <!-- 5. 治证说明（新增） -->
+            <div class="tab-pane fade" id="treatment" role="tabpanel">
+                <h4 class="mb-3">九宫穴对应治证与适应症</h4>
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>九宫方位</th>
+                                <th>对应穴位</th>
+                                <th>核心治证</th>
+                                <th>适应症细分</th>
+                                <th>配伍建议</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>中宫</td>
+                                <td>关元</td>
+                                <td>下焦亏虚、元气不足</td>
+                                <td>尿频尿急、腰膝酸软、遗精早泄、月经不调</td>
+                                <td>配气海、足三里增强补气效果</td>
+                            </tr>
+                            <tr>
+                                <td>乾宫</td>
+                                <td>气海</td>
+                                <td>气虚乏力、腹部坠胀</td>
+                                <td>小腹坠胀、气短懒言、大便溏稀</td>
+                                <td>配关元、太冲理气健脾</td>
+                            </tr>
+                            <tr>
+                                <td>坤宫</td>
+                                <td>中极</td>
+                                <td>膀胱气化不利、胞宫瘀阻</td>
+                                <td>癃闭、痛经、盆腔炎、前列腺炎</td>
+                                <td>配三阴交、阴陵泉利水通淋</td>
+                            </tr>
+                            <tr>
+                                <td>巽宫</td>
+                                <td>大巨（左）</td>
+                                <td>胃肠气机阻滞、下焦气化不利</td>
+                                <td>1. 胃肠病症：腹胀、便秘、腹泻、消化不良、绕脐腹痛；<br>2. 泌尿病症：尿频、尿急、尿潴留、遗尿；<br>3. 生殖病症（男）：阳痿、早泄、精索静脉曲张；<br>4. 其他：肥胖症（腹部脂肪堆积）、疝气</td>
+                                <td>1. 配中脘、足三里：增强胃肠运化，治腹胀便秘；<br>2. 配关元、三阴交：调理下焦，治尿频、阳痿；<br>3. 配太冲、期门：疏肝理气，治疝气、精索静脉曲张</td>
+                            </tr>
+                            <tr>
+                                <td>兑宫</td>
+                                <td>大巨（右）</td>
+                                <td>脾胃虚弱、水湿内停、生殖功能失调</td>
+                                <td>1. 胃肠病症：嗳气、反酸、食欲不振、腹痛腹泻、肠易激综合征；<br>2. 泌尿病症：尿急、尿痛、小便不利、慢性尿道炎；<br>3. 生殖病症（女）：月经不调、痛经、盆腔炎、卵巢囊肿；<br>4. 其他：下肢水肿、腹部坠胀、产后恶露不尽</td>
+                                <td>1. 配足三里、脾俞：健脾祛湿，治腹泻、水肿；<br>2. 配中极、阴陵泉：清热利湿，治尿道炎、盆腔炎；<br>3. 配血海、太冲：活血调经，治痛经、月经不调；<br>4. 配气海、关元：补气养血，治产后恶露不尽</td>
+                            </tr>
+                            <tr>
+                                <td>坎宫</td>
+                                <td>胞门（左）</td>
+                                <td>下焦瘀阻、精室亏虚、膀胱气化失常</td>
+                                <td>1. 泌尿病症：尿频尿急、尿痛、尿不尽、慢性前列腺炎、前列腺增生、尿潴留；<br>2. 生殖病症（男）：阳痿、早泄、遗精、少精弱精、精索静脉曲张、附睾炎；<br>3. 其他：小腹冷痛、疝气、下肢厥冷（下焦虚寒）</td>
+                                <td>1. 配关元、太冲：活血化瘀，治前列腺增生、精索静脉曲张；<br>2. 配中极、阴陵泉：清热利湿，治慢性前列腺炎、尿痛；<br>3. 配气海、足三里：温补元气，治阳痿、少精弱精；<br>4. 配大敦、归来：疏肝理气，治疝气、小腹冷痛</td>
+                            </tr>
+                            <tr>
+                                <td>离宫</td>
+                                <td>子户（右）</td>
+                                <td>胞宫瘀滞、冲任失调、湿热带下</td>
+                                <td>1. 生殖病症（女）：月经不调、痛经、闭经、子宫内膜炎、盆腔炎、附件炎、卵巢囊肿、子宫肌瘤、不孕症；<br>2. 泌尿病症：尿频、尿急、慢性尿道炎、尿道综合征；<br>3. 其他：产后恶露不尽、小腹坠胀、宫寒不孕、更年期综合征（潮热盗汗、情绪烦躁）</td>
+                                <td>1. 配关元、血海：活血调经，治痛经、月经不调、不孕症；<br>2. 配中极、三阴交：清热祛湿，治盆腔炎、附件炎、带下异常；<br>3. 配气海、足三里：补气养血，治产后恶露不尽、宫寒不孕；<br>4. 配太冲、内关：疏肝理气，治更年期综合征、情绪烦躁</td>
+                            </tr>
+                            <tr>
+                                <td>艮宫</td>
+                                <td>子宫穴（左）</td>
+                                <td>宫寒瘀阻、冲任虚寒、下焦虚寒证</td>
+                                <td>1. 生殖病症（女）：原发性痛经、宫寒不孕、子宫内膜异位症、子宫肌瘤（寒凝血瘀型）、月经后期、量少色暗；<br>2. 泌尿病症：尿频、夜尿多、遗尿（下焦虚寒型）、慢性膀胱炎；<br>3. 其他：小腹冷痛、腰骶酸痛（肾阳虚衰）、产后宫缩无力、恶露不下</td>
+                                <td>1. 配关元、艾灸：温经散寒，治宫寒不孕、痛经；<br>2. 配中极、三阴交：活血通经，治月经后期、恶露不下；<br>3. 配肾俞、命门：温补肾阳，治夜尿多、腰骶酸痛；<br>4. 配血海、太冲：化瘀消癥，治子宫肌瘤（寒瘀型）</td>
+                            </tr>
+                            <tr>
+                                <td>震宫</td>
+                                <td>子宫穴（右）</td>
+                                <td>气滞血瘀、湿热下注、冲任失调证</td>
+                                <td>1. 生殖病症（女）：继发性痛经、月经不调（肝郁气滞型）、盆腔炎（湿热型）、卵巢囊肿、更年期功血、不孕症（瘀阻型）；<br>2. 泌尿病症：尿急、尿痛（湿热型）、尿道综合征（肝郁化火型）；<br>3. 其他：小腹坠胀（气滞型）、带下量多（黄稠）、外阴瘙痒（湿热下注）</td>
+                                <td>1. 配太冲、期门：疏肝理气，治月经不调、小腹坠胀；<br>2. 配中极、阴陵泉：清热利湿，治盆腔炎、带下异常；<br>3. 配血海、膈俞：活血化瘀，治继发性痛经、瘀阻型不孕；<br>4. 配内关、足三里：调理冲任，治更年期功血</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert alert-primary">
+                    <strong>治证核心原则</strong>：九宫穴以中宫（关元）为核心，兼顾八宫靶向调理下焦气血；实证泻子穴、虚证补母穴，结合洛书数行针增强疗效。
+                </div>
+
+                <h5 class="mt-3">特殊治证注意事项</h5>
+                <ul>
+                    <li>前列腺增生（血瘀型）：重点针刺坎宫（胞门左）+ 坤宫（中极），配合关元、三阴交；行针时采用“捻转泻法”（逆时针捻转90°），留针期间每5分钟行针1次，增强化瘀散结效果，避免深刺损伤前列腺包膜</li>
+                    <li>宫寒痛经（寒瘀型）：重点针刺艮宫（子宫左）+ 中宫（关元），行针后关元穴加艾灸（温和灸15分钟，温度以皮肤潮红为度）；针刺深度较常规浅3-5mm，采用“捻转补法”，忌用泻法以免加重虚寒</li>
+                    <li>尿失禁（气虚下陷型）：以中宫（关元）、乾宫（气海）为主穴，配合巽宫（大巨左）、兑宫（大巨右）；行针次数增至洛书数2倍（关元10次、气海12次），留针时间延长至35分钟，出针后按压针孔2分钟，避免气虚外泄</li>
+                    <li>盆腔炎（湿热型）：重点针刺离宫（子户右）+ 坤宫（中极），配合阴陵泉、太冲；采用“提插泻法”（提插幅度5-8mm），留针期间不艾灸，针刺后嘱患者多饮水，促进湿热下注排出</li>
+                    <li>阳痿（元气亏虚型）：重点针刺坎宫（胞门左）+ 乾宫（气海），配合关元、足三里；行针时采用“温针灸”（针尾加艾柱1段），洛书数行针后轻轻震颤针柄30秒，增强针感传导至会阴部</li>
+                    <li>子宫肌瘤（寒瘀型）：重点针刺艮宫（子宫左）+ 震宫（子宫右），配合血海、太冲；针刺深度控制在30mm以内（避免刺伤子宫），行针采用“捻转结合提插”手法，每周治疗3次，经期暂停</li>
+                    <li>慢性前列腺炎（湿热下注型）：重点针刺坎宫（胞门左）+ 离宫（子户右），配合中极、阴陵泉；行针用“透天凉”手法（慢提快按），留针25分钟，针刺后热敷下腹部10分钟，忌辛辣刺激饮食</li>
+                    <li>更年期综合征（肝郁化火型）：重点针刺震宫（子宫右）+ 兑宫（大巨右），配合太冲、内关；行针采用“捻转泻法”，留针期间每10分钟行针1次，避免针刺过深，可配合耳穴压豆（肝、肾、内分泌穴）</li>
+                    <li>卵巢囊肿（气滞血瘀型）：重点针刺离宫（子户右）+ 震宫（子宫右），配合血海、期门；行针用“捻转泻法”，留针30分钟，每月治疗10次，月经干净后开始，经期停针，定期复查囊肿大小</li>
+                    <li>小儿遗尿（脾肾两虚型）：重点针刺中宫（关元）+ 乾宫（气海），配合足三里、三阴交；针刺深度减半（15-20mm），行针轻柔（捻转角度≤45°），不留针，每日1次，睡前1小时治疗效果更佳</li>
+                    <li>精索静脉曲张（气滞血瘀型）：重点针刺巽宫（大巨左）+ 坎宫（胞门左），配合太冲、归来；行针用“捻转泻法”，留针20分钟，治疗期间避免久站久坐，穿紧身内裤托举阴囊</li>
+                    <li>产后恶露不尽（气虚血瘀型）：重点针刺兑宫（大巨右）+ 乾宫（气海），配合关元、血海；行针采用“平补平泻”手法，留针20分钟，出针后按压针孔3分钟，治疗期间忌食生冷，注意腹部保暖</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
