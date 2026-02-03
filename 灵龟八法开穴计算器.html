@@ -732,24 +732,43 @@
         // ===================== 页面初始化 =====================
         window.onload = function() {
             const now = new Date();
-            const currentDatetime = now.toISOString().slice(0, 16); // 适配datetime-local
-            const currentDate = now.toISOString().slice(0, 10);     // 适配date
+            // 使用本地时间格式化函数，修复时区偏差
+            const currentDatetime = formatLocalDateTime(now);
+            const currentDate = formatLocalDate(now);
+            
             document.getElementById('manual-datetime').value = currentDatetime;
             document.getElementById('full-day-date').value = currentDate;
             // 绑定选项卡切换事件
             bindTabEvent();
-        };
+                // ===================== 新增：页面加载完成后自动计算 =====================
+            // 延时300毫秒执行，保证页面DOM、样式完全渲染后再触发计算
+            setTimeout(() => {
+                calculateAuto();
+            }, 300);
+                };
 
         // ===================== 基础工具函数 =====================
-        // 格式化日期时间
+        // 格式化本地时间为 datetime-local 格式：YYYY-MM-DDTHH:mm
+        // 基础工具函数区域补充
         function formatDateTime(date) {
             const pad = n => String(n).padStart(2, '0');
             return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
         }
-        // 格式化日期
-        function formatDate(date) {
-            const pad = n => String(n).padStart(2, '0');
-            return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+        function formatLocalDateTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        // 格式化本地日期为 date 格式：YYYY-MM-DD
+        function formatLocalDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
         // 获取干支对应的代数
         function getGanZhiNum(ganZhiChar, numMap) {
@@ -861,7 +880,19 @@
                     tab.classList.add('active');
                     const tabId = tab.dataset.tab;
                     document.getElementById(`${tabId}-form`).classList.add('active');
-                    // 切换选项卡隐藏结果
+                    
+                    // ===================== 新增核心逻辑 =====================
+                    // 切换到手动计算标签时，自动更新为当前最新本地时间
+                    if (tabId === 'manual') {
+                        document.getElementById('manual-datetime').value = formatLocalDateTime(new Date());
+                    }
+                    // 可选：切换到全天12时辰标签时，自动更新为当前最新日期
+                    if (tabId === 'full-day') {
+                        document.getElementById('full-day-date').value = formatLocalDate(new Date());
+                    }
+                    // ======================================================
+
+                    // 切换选项卡隐藏结果（原有逻辑保留）
                     resultArea.style.display = 'none';
                     singleResult.style.display = 'none';
                     fullDayResult.style.display = 'none';
@@ -925,7 +956,7 @@
 
         // ===================== 全天12时辰批量计算函数 =====================
         function calculateFullDay12ShichenPoints(targetDate = new Date(), gender = '男', longitude = 120.0) {
-            const targetDateStr = formatDate(targetDate);
+            const targetDateStr = formatLocalDate(targetDate);
             const fullDayPoints = [];
             // 遍历12时辰，每个时辰取中间时间计算
             SHI_CHEN_CONFIG.forEach(([shiChenName, shiStart]) => {
@@ -1095,13 +1126,17 @@
         // ===================== 表单重置函数 =====================
         function resetForm(formType) {
             const form = document.getElementById(`${formType}-form`);
+            const now = new Date();
             form.querySelectorAll('input').forEach(input => {
                 if (input.type === 'number') {
-                    input.value = 120.0; // 经度重置为默认值
+                    // 经度重置为默认值
+                    input.value = 120.0; 
                 } else if (input.type === 'datetime-local') {
-                    input.value = new Date().toISOString().slice(0,16);
+                    // 重置为当前本地时间
+                    input.value = formatLocalDateTime(now);
                 } else if (input.type === 'date') {
-                    input.value = new Date().toISOString().slice(0,10);
+                    // 重置为当前本地日期
+                    input.value = formatLocalDate(now);
                 }
             });
             // 重置性别为男
