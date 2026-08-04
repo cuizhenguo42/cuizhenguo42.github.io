@@ -9,7 +9,20 @@
         body { background-color: #f8f5f0; padding: 20px; max-width: 1300px; margin: 0 auto; }
 
         .title { text-align: center; color: #a83232; margin-bottom: 8px; font-size: 26px; }
-        .subtitle { text-align: center; color: #888; font-size: 13px; margin-bottom: 20px; }
+        .subtitle { text-align: center; color: #888; font-size: 13px; margin-bottom: 14px; }
+
+        /* 安全警示卡片 */
+        .safety-box {
+            background: #fff5f5; border: 1px solid #d98880;
+            border-radius: 8px; padding: 14px 18px; margin-bottom: 16px;
+            color: #7a1f1f; font-size: 14px; line-height: 1.75;
+        }
+        .safety-box h3 {
+            margin: 0 0 8px 0; font-size: 15px; color: #a83232;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .safety-box ol { padding-left: 18px; margin: 0; }
+        .safety-box li { margin-bottom: 3px; }
 
         /* 查询栏 */
         .query-box {
@@ -83,6 +96,7 @@
         /* 纳甲法专用 */
         .open-point { color: #a83232; font-weight: bold; }
         .closed-bg { background-color: #f0f0f0; color: #888; }
+        .closed-row td { background-color: #f5f5f5 !important; color: #999; }
         .he-point { color: #2468c2; }
 
         /* 纳子法专用 */
@@ -127,6 +141,17 @@
     <h2 class="title">子午流注 — 纳甲法 · 纳子法</h2>
     <p class="subtitle">针灸择时取穴辅助工具</p>
 
+    <!-- 针刺安全重要提示 -->
+    <div class="safety-box">
+        <h3>⚠ 针刺安全重要提示</h3>
+        <ol>
+            <li>孕妇禁用穴位：合谷、三阴交、昆仑、关元、中极、石门；经期三阴交慎针。</li>
+            <li>背部膀胱经背俞穴禁止直刺深刺，需斜刺0.5~0.8寸，防止气胸。</li>
+            <li>风池、风府、睛明、委中等深部穴位需专业医师操作，严控针刺深度。</li>
+            <li>腹部穴位针刺前排空膀胱，饱食、肝脾肿大人群深刺需谨慎。</li>
+        </ol>
+    </div>
+
     <!-- 共享查询栏 -->
     <div class="query-box">
         <label>日期：</label>
@@ -162,7 +187,7 @@
             <div class="legend">
                 <span><span class="open-point">● 开穴穴位</span></span>
                 <span><span class="he-point">● 合日借用穴（闭穴时）</span></span>
-                <span><span style="background:#fff0f0;padding:1px 6px;">■ 当前时��</span></span>
+                <span><span style="background:#fff0f0;padding:1px 6px;">■ 当前时辰</span></span>
                 <span><span style="color:#bf360c;">💉 针刺操作</span></span>
             </div>
 
@@ -310,16 +335,19 @@ function useNow() {
 
 /* ========== 纳甲法数据 ========== */
 const najiaPointTable = {
-    "甲":{zi:"至阴",chou:"涌泉",yin:"窍阴",mao:"大敦",chen:"厉兑",si:"隐白",wu:"少泽",wei:"少冲",shen:"商阳",you:"少商",xu:"内庭",hai:"太白"},
-    "乙":{zi:"涌泉",chou:"然谷",yin:"大敦",mao:"行间",chen:"隐白",si:"大都",wu:"少冲",wei:"神门",shen:"少商",you:"鱼际",xu:"太白",hai:"公孙"},
-    "丙":{zi:"束骨",chou:"太溪",yin:"临泣",mao:"曲泉",chen:"解溪",si:"商丘",wu:"前谷",wei:"少府",shen:"二间",you:"劳宫",xu:"冲阳",hai:"三阴交"},
-    "丁":{zi:"昆仑",chou:"复溜",yin:"阳辅",mao:"中封",chen:"冲阳",si:"漏谷",wu:"阳谷",wei:"灵道",shen:"三间",you:"太渊",xu:"陷谷",hai:"地机"},
-    "戊":{zi:"京骨",chou:"水泉",yin:"丘墟",mao:"太冲",chen:"足三里",si:"阴陵泉",wu:"腕骨",wei:"通里",shen:"合谷",you:"经渠",xu:"内庭",hai:"血海"},
-    "己":{zi:"金门",chou:"照海",yin:"悬钟",mao:"蠡沟",chen:"丰隆",si:"地机",wu:"后溪",wei:"阴郄",shen:"阳溪",you:"列缺",xu:"厉兑",hai:"公孙"},
-    "庚":{zi:"飞扬",chou:"大钟",yin:"光明",mao:"中都",chen:"下巨虚",si:"漏谷",wu:"支正",wei:"少海",shen:"曲池",you:"尺泽",xu:"解溪",hai:"商丘"},
-    "辛":{zi:"附阳",chou:"交信",yin:"阳交",mao:"膝关",chen:"条口",si:"三阴交",wu:"养老",wei:"小海",shen:"手三里",you:"孔最",xu:"冲阳",hai:"阴陵泉"},
-    "壬":{zi:"委中",chou:"阴谷",yin:"阳陵泉",mao:"曲泉",chen:"足三里",si:"血海",wu:"小海",wei:"少海",shen:"足三里",you:"尺泽",xu:"解溪",hai:"阴谷"},
-    "癸":{zi:"合阳",chou:"筑宾",yin:"阳陵泉",mao:"行间",chen:"丰隆",si:"地机",wu:"天井",wei:"神门",shen:"曲池",you:"太渊",xu:"冲阳",hai:"复溜"}
+    // ★ 依据明代徐凤《针灸大全·子午流注逐日按时定穴歌》逐项核对修订
+    // 阳日（甲丙戊庚壬）值日经开穴于阳支时辰（子寅辰午申戌），阴日（乙丁己辛癸）开于阴支时辰（丑卯巳未酉亥）
+    // 闭穴按"合日互用"取合日同时辰开穴（甲己、乙庚、丙辛、丁壬、戊癸相合）；输穴同时开原穴（阴经以输代原），以"/"标注
+    "甲":{zi:"前谷",chou:"少海",yin:"陷谷/丘墟",mao:"间使",chen:"阳溪",si:"隐白",wu:"委中",wei:"鱼际",shen:"液门",you:"太溪/太白",xu:"窍阴",hai:"中封"},
+    "乙":{zi:"足三里",chou:"太白/太冲",yin:"天井",mao:"经渠",chen:"商阳",si:"阴谷",wu:"通谷",wei:"劳宫",shen:"临泣/合谷",you:"大敦",xu:"阳谷",hai:"少府"},
+    "丙":{zi:"三间/腕骨",chou:"曲泽",yin:"昆仑",mao:"少商",chen:"阳陵泉",si:"然谷",wu:"中渚",wei:"太冲/太渊",shen:"少泽",you:"灵道",xu:"内庭",hai:"阴陵泉"},
+    "丁":{zi:"关冲",chou:"复溜",yin:"至阴",mao:"曲泉",chen:"侠溪",si:"大陵",wu:"后溪/京骨",wei:"少冲",shen:"解溪",you:"大都",xu:"曲池",hai:"太渊/神门"},
+    "戊":{zi:"阳辅",chou:"行间",yin:"小海",mao:"神门/太溪",chen:"支沟",si:"商丘",wu:"厉兑",wei:"尺泽",shen:"二间",you:"中冲",xu:"束骨/冲阳",hai:"涌泉"},
+    "己":{zi:"前谷",chou:"少海",yin:"陷谷/丘墟",mao:"间使",chen:"阳溪",si:"隐白",wu:"委中",wei:"鱼际",shen:"液门",you:"太溪/太白",xu:"窍阴",hai:"中封"},
+    "庚":{zi:"足三里",chou:"太白/太冲",yin:"天井",mao:"经渠",chen:"商阳",si:"阴谷",wu:"通谷",wei:"劳宫",shen:"临泣/合谷",you:"大敦",xu:"阳谷",hai:"少府"},
+    "辛":{zi:"三间/腕骨",chou:"曲泽",yin:"昆仑",mao:"少商",chen:"阳陵泉",si:"然谷",wu:"中渚",wei:"太冲/太渊",shen:"少泽",you:"灵道",xu:"内庭",hai:"阴陵泉"},
+    "壬":{zi:"关冲",chou:"复溜",yin:"至阴",mao:"曲泉",chen:"侠溪",si:"大陵",wu:"后溪/京骨",wei:"少冲",shen:"解溪",you:"大都",xu:"曲池",hai:"太渊/神门"},
+    "癸":{zi:"阳辅",chou:"行间",yin:"小海",mao:"神门/太溪",chen:"支沟",si:"商丘",wu:"厉兑",wei:"尺泽",shen:"二间",you:"中冲",xu:"束骨/冲阳",hai:"涌泉"}
 };
 
 /* ========== 纳甲法配穴（按值日天干） ========== */
@@ -390,8 +418,8 @@ const najiaPeiXue = {
 const naziData = {
     "子": {
         mer: "足少阳胆经", elem: "木", yang: true, yinMer: false,
-        bu:   { name: "侠溪", type: "荥水穴", tag: "荥→水→木之母" },
-        xie:  { name: "阳辅", type: "经火穴", tag: "经→火→木之子" },
+        bu:   { name: "侠溪", type: "荥水穴", tag: "胆属木，荥属水，水为木之母" },
+        xie:  { name: "阳辅", type: "经火穴", tag: "胆属木，经属火，火为木之子" },
         yuan: { name: "丘墟", type: "原穴" },
         pei: {
             yuanLuo: { names:"丘墟 + 蠡沟", zhuZhi:"胆经原穴配肝经络穴，调和肝胆气机，治偏头痛、胁痛、口苦" },
@@ -401,8 +429,8 @@ const naziData = {
     },
     "丑": {
         mer: "足厥阴肝经", elem: "木", yang: false, yinMer: true,
-        bu:   { name: "曲泉", type: "合水穴", tag: "合→水→木之母" },
-        xie:  { name: "行间", type: "荥火穴", tag: "荥→火→木之子" },
+        bu:   { name: "曲泉", type: "合水穴", tag: "肝属木，合属水，水为木之母" },
+        xie:  { name: "行间", type: "荥火穴", tag: "肝属木，荥属火，火为木之子" },
         yuan: { name: "太冲", type: "原穴" },
         pei: {
             yuanLuo: { names:"太冲 + 光明", zhuZhi:"肝经原穴配胆经络穴，疏肝明目，治肝郁头痛、目赤眼涩" },
@@ -412,8 +440,8 @@ const naziData = {
     },
     "寅": {
         mer: "手太阴肺经", elem: "金", yang: false, yinMer: true,
-        bu:   { name: "太渊", type: "输土穴（输原同穴）", tag: "输→土→金之母" },
-        xie:  { name: "尺泽", type: "合水穴", tag: "合→水→金之子" },
+        bu:   { name: "太渊", type: "输土穴（输原同穴）", tag: "肺属金，输属土，土为金之母" },
+        xie:  { name: "尺泽", type: "合水穴", tag: "肺属金，合属水，水为金之子" },
         yuan: { name: "太渊", type: "输原同穴" },
         pei: {
             yuanLuo: { names:"太渊 + 偏历", zhuZhi:"肺经原穴配大肠络穴，宣肺通腑，治咳喘、胸闷、便秘" },
@@ -423,8 +451,8 @@ const naziData = {
     },
     "卯": {
         mer: "手阳明大肠经", elem: "金", yang: true, yinMer: false,
-        bu:   { name: "曲池", type: "合土穴", tag: "合→土→金之母" },
-        xie:  { name: "二间", type: "荥水穴", tag: "荥→水→金之子" },
+        bu:   { name: "曲池", type: "合土穴", tag: "大肠属金，合属土，土为金之母" },
+        xie:  { name: "二间", type: "荥水穴", tag: "大肠属金，荥属水，水为金之子" },
         yuan: { name: "合谷", type: "原穴" },
         pei: {
             yuanLuo: { names:"合谷 + 列缺", zhuZhi:"大肠原穴配肺经络穴，宣肺解表，治感冒头痛、鼻塞流涕" },
@@ -434,8 +462,8 @@ const naziData = {
     },
     "辰": {
         mer: "足阳明胃经", elem: "土", yang: true, yinMer: false,
-        bu:   { name: "解溪", type: "经火穴", tag: "经→火→土之母" },
-        xie:  { name: "厉兑", type: "井金穴", tag: "井→金→土之子" },
+        bu:   { name: "解溪", type: "经火穴", tag: "胃属土，经属火，火为土之母" },
+        xie:  { name: "厉兑", type: "井金穴", tag: "胃属土，井属金，金为土之子" },
         yuan: { name: "冲阳", type: "原穴" },
         pei: {
             yuanLuo: { names:"冲阳 + 公孙", zhuZhi:"胃经原穴配脾经络穴，和胃降逆，治胃痛、呕吐、消化不良" },
@@ -445,8 +473,8 @@ const naziData = {
     },
     "巳": {
         mer: "足太阴脾经", elem: "土", yang: false, yinMer: true,
-        bu:   { name: "大都", type: "荥火穴", tag: "荥→火→土之母" },
-        xie:  { name: "商丘", type: "经金穴", tag: "经→金→土之子" },
+        bu:   { name: "大都", type: "荥火穴", tag: "脾属土，荥属火，火为土之母" },
+        xie:  { name: "商丘", type: "经金穴", tag: "脾属土，经属金，金为土之子" },
         yuan: { name: "太白", type: "原穴" },
         pei: {
             yuanLuo: { names:"太白 + 丰隆", zhuZhi:"脾经原穴配胃经络穴，健脾化痰，治脾虚腹胀、痰多眩晕、身重" },
@@ -456,8 +484,8 @@ const naziData = {
     },
     "午": {
         mer: "手少阴心经", elem: "火", yang: false, yinMer: true,
-        bu:   { name: "少冲", type: "井木穴", tag: "井→木→火之母" },
-        xie:  { name: "神门", type: "输土穴（输原同穴）", tag: "输→土→火之子" },
+        bu:   { name: "少冲", type: "井木穴", tag: "心属火，井属木，木为火之母" },
+        xie:  { name: "神门", type: "输土穴（输原同穴）", tag: "心属火，输属土，土为火之子" },
         yuan: { name: "神门", type: "输原同穴" },
         pei: {
             yuanLuo: { names:"神门 + 支正", zhuZhi:"心经原穴配小肠络穴，清心安神，治心悸、心烦、神志不安" },
@@ -467,8 +495,8 @@ const naziData = {
     },
     "未": {
         mer: "手太阳小肠经", elem: "火", yang: true, yinMer: false,
-        bu:   { name: "后溪", type: "输木穴", tag: "输→木→火之母" },
-        xie:  { name: "小海", type: "合土穴", tag: "合→土→火之子" },
+        bu:   { name: "后溪", type: "输木穴", tag: "小肠属火，输属木，木为火之母" },
+        xie:  { name: "小海", type: "合土穴", tag: "小肠属火，合属土，土为火之子" },
         yuan: { name: "腕骨", type: "原穴" },
         pei: {
             yuanLuo: { names:"腕骨 + 通里", zhuZhi:"小肠原穴配心经络穴，清心利小肠，治心烦尿赤、舌疮、小便涩痛" },
@@ -478,8 +506,8 @@ const naziData = {
     },
     "申": {
         mer: "足太阳膀胱经", elem: "水", yang: true, yinMer: false,
-        bu:   { name: "至阴", type: "井金穴", tag: "井→金→水之母" },
-        xie:  { name: "束骨", type: "输木穴", tag: "输→木→水之子" },
+        bu:   { name: "至阴", type: "井金穴", tag: "膀胱属水，井属金，金为水之母" },
+        xie:  { name: "束骨", type: "输木穴", tag: "膀胱属水，输属木，木为水之子" },
         yuan: { name: "京骨", type: "原穴" },
         pei: {
             yuanLuo: { names:"京骨 + 大钟", zhuZhi:"膀胱原穴配肾经络穴，通调膀胱气化，治小便不利、水肿、腰腿痛" },
@@ -489,8 +517,8 @@ const naziData = {
     },
     "酉": {
         mer: "足少阴肾经", elem: "水", yang: false, yinMer: true,
-        bu:   { name: "复溜", type: "经金穴", tag: "经→金→水之母" },
-        xie:  { name: "涌泉", type: "井木穴", tag: "井→木→水之子" },
+        bu:   { name: "复溜", type: "经金穴", tag: "肾属水，经属金，金为水之母" },
+        xie:  { name: "涌泉", type: "井木穴", tag: "肾属水，井属木，木为水之子" },
         yuan: { name: "太溪", type: "原穴" },
         pei: {
             yuanLuo: { names:"太溪 + 飞扬", zhuZhi:"肾经原穴配膀胱络穴，补肾壮腰，治肾虚腰痛、遗精、耳鸣头晕" },
@@ -500,8 +528,8 @@ const naziData = {
     },
     "戌": {
         mer: "手厥阴心包经", elem: "火", yang: false, yinMer: true,
-        bu:   { name: "中冲", type: "井木穴", tag: "井→木→火之母" },
-        xie:  { name: "大陵", type: "输土穴（输原同穴）", tag: "输→土→火之子" },
+        bu:   { name: "中冲", type: "井木穴", tag: "心包属火，井属木，木为火之母" },
+        xie:  { name: "大陵", type: "输土穴（输原同穴）", tag: "心包属火，输属土，土为火之子" },
         yuan: { name: "大陵", type: "输原同穴" },
         pei: {
             yuanLuo: { names:"大陵 + 外关", zhuZhi:"心包原穴配三焦络穴，宽胸理气，治胸胁闷痛、心悸心烦、胃痛" },
@@ -511,8 +539,8 @@ const naziData = {
     },
     "亥": {
         mer: "手少阳三焦经", elem: "火", yang: true, yinMer: false,
-        bu:   { name: "中渚", type: "输木穴", tag: "输→木→火之母" },
-        xie:  { name: "天井", type: "合土穴", tag: "合→土→火之子" },
+        bu:   { name: "中渚", type: "输木穴", tag: "三焦属火，输属木，木为火之母" },
+        xie:  { name: "天井", type: "合土穴", tag: "三焦属火，合属土，土为火之子" },
         yuan: { name: "阳池", type: "原穴" },
         pei: {
             yuanLuo: { names:"阳池 + 内关", zhuZhi:"三焦原穴配心包络穴，通调三焦气机，治胸闷胁胀、脘腹气滞、便秘" },
@@ -589,6 +617,7 @@ const pointPeiXue = {
     // === 足太阳膀胱经 ===
     "至阴":  "配隐白：调冲任，治胎位不正、崩漏；配风池：疏风止痛，治后头痛",
     "束骨":  "配昆仑：通经活络，治腰腿痛、后头痛；配风池：祛风止痛，治颈项强痛",
+    "通谷":  "配束骨：通调膀胱经气，治头痛项强、目眩；配太白：健脾化浊，治腹胀",
     "京骨":  "配风池：祛风通络，治后头痛眩晕；配委中：通经活络，治腰背痛、癫痫",
     "金门":  "配申脉：通经止痛，治急性腰痛、头痛；配风池：息风定惊，治小儿惊风",
     "昆仑":  "配风池：祛风通络，治后头痛落枕；配委中：通经止痛，治腰背痛、坐骨神经痛",
@@ -615,12 +644,15 @@ const pointPeiXue = {
     "大陵":  "配内关：宽胸理气和胃，治心悸胃痛呕吐；配神门：宁心安神，治失眠怔忡",
     "内关":  "配公孙：和胃降逆安神，治胃痛呕吐心悸失眠（八脉交会穴）；配神门：宁心安神宽胸，治胸痹心痛失眠",
     "间使":  "配内关：宽胸理气，治胸痹心痛；配大陵：清心宁神，治心悸",
+    "曲泽":  "配内关：清心宁胃，治心痛呕吐；配委中：清热凉血，治暑热吐泻",
 
     // === 手少阳三焦经 ===
     "中渚":  "配外关：疏风清热通络，治偏头痛耳鸣落枕；配听会：聪耳开窍，治耳鸣耳聋",
     "阳池":  "配外关：通调三焦气机，治腕痛胁胀；配中脘：理气和胃，治胃痛脘痞",
     "外关":  "配足临泣：疏风清热解表，治偏头痛、外感发热、胁痛（八脉交会穴）；配合谷：疏风解表，治感冒发热",
     "天井":  "配曲池：疏风散结，治淋巴结肿大、肘痛；配翳风：通络聪耳，治耳鸣腮肿",
+    "液门":  "配中渚：清泻少阳风热，治头痛、咽喉肿痛、手臂痛；配鱼际：清热利咽，治咽喉干痛",
+    "关冲":  "配少商：清热开窍，治咽喉肿痛、高热；配中冲：开窍醒神，治中暑昏厥",
     "支沟":  "配照海：润肠通便，治习惯性便秘；配阳陵泉：理气通腑，治胁痛便秘",
 
     // === 足少阳胆经 ===
@@ -660,6 +692,21 @@ function getPeiXue(name) {
     const result = shown.join(" ｜ ") + more;
     pointPeiCache[name] = result;
     return result;
+}
+
+/* ========== 纳甲法开穴单元格（支持"输/原"双穴，以/分隔） ========== */
+function najiaPointBlock(raw, clsName) {
+    const parts = String(raw).split("/").map(s => s.trim()).filter(Boolean);
+    const point = parts.map(p => `<span class="${clsName}">${p}</span>`).join(' <span style="color:#aaa">／</span> ');
+    const desc = parts.map(p => {
+        const px = getPeiXue(p);
+        const zf = getZhenFa(p);
+        let s = pointDesc[p] || "";
+        if (px) s += `<br><span style="color:#6a1b9a;">配穴：${px}</span>`;
+        if (zf) s += `<br><span style="color:#bf360c;">💉 针法：${zf}</span>`;
+        return s;
+    }).join('<br><span style="color:#ddd">— — —</span><br>');
+    return { point, desc };
 }
 
 /* ========== 获取针刺操作说明 ========== */
@@ -707,6 +754,7 @@ const pointDesc = {
     "太白":"胃痛腹胀、便秘、身重乏力",
     "公孙":"胃痛反酸、肠痉挛、肠鸣腹泻",
     "束骨":"后头痛、颈项僵硬、腰腿痛",
+    "通谷":"头痛、项强、目眩、腹胀、足下热",
     "太溪":"肾虚腰痛、月经失调、咽干盗汗",
     "临泣":"侧头痛、眼涩、乳腺胀痛、胁肋痛",
     "曲泉":"痛经带下、小便不利、膝肿痛",
@@ -725,6 +773,7 @@ const pointDesc = {
     "漏谷":"腹胀肠鸣、小腿麻木、小便不利",
     "阳谷":"头晕耳鸣、发热、手腕酸痛",
     "灵道":"心痛、失声、前臂冷痛",
+    "少海":"心痛、肘臂挛痛、手颤、瘰疬、健忘",
     "三间":"咽喉肿痛、手背肿痛、腹胀",
     "太渊":"咳喘胸闷、无脉症、手腕痛",
     "陷谷":"脸肿、腹胀、足背肿痛",
@@ -776,8 +825,13 @@ const pointDesc = {
     "侠溪":"偏头痛、耳鸣耳聋、目赤肿痛、胁肋痛、足背肿痛",
     "中冲":"中风昏迷、中暑晕厥、心痛心烦、舌强不语",
     "大陵":"心痛心悸、癫狂痫证、胃痛呕吐、手腕痛",
+    "间使":"心痛、心悸、胃痛呕吐、癫狂、肘臂挛痛",
+    "曲泽":"心痛、心悸、胃痛呕吐、热病、烦躁、肘臂痛",
     "中渚":"头痛耳鸣、目赤、手指屈伸不利、落枕肩背痛",
-    "阳池":"手腕痛、肩臂痛、消渴口干、目赤肿痛"
+    "阳池":"手腕痛、肩臂痛、消渴口干、目赤肿痛",
+    "液门":"头痛、目赤肿痛、耳鸣、咽喉肿痛、手臂肿痛",
+    "关冲":"头痛、咽喉肿痛、热病、中暑昏迷、舌强",
+    "支沟":"便秘、胁肋痛、耳鸣、暴喑、肩臂酸痛"
 };
 
 /* ========== 穴位针刺操作（深度、角度、手法、注意） ========== */
@@ -845,6 +899,7 @@ const pointZhenFa = {
     // === 足太阳膀胱经 ===
     "至阴":"浅刺0.1~0.2寸，或点刺出血。井穴浅刺。胎位不正时多用艾灸至阴穴（灸15~20分钟）。纳子法补母时用捻转补法浅刺留针，补益膀胱经气；日常调胎位以灸法为主。",
     "束骨":"直刺0.3~0.5寸。局部酸胀。纳子法泻子时用捻转泻法，泻膀胱实邪。注意：足背皮下组织薄，不宜深刺。",
+    "通谷":"直刺0.2~0.3寸。局部酸胀。井荥之间，浅刺为宜，可透向束骨（通谷透束骨：通调膀胱经气）。注意：足背皮下组织薄，不宜深刺。",
     "京骨":"直刺0.3~0.5寸。局部酸胀。注意避开足背外侧皮神经。不宜深刺。",
     "金门":"直刺0.3~0.5寸。局部酸胀。注意：不可深刺伤及深层组织。急性腰痛时针刺常配合活动腰部。",
     "昆仑":"直刺0.5~0.8寸。局部酸胀，可向足背或小腿放射。注意：孕妇禁针！针刺时避开腓肠神经及小隐静脉。",
@@ -870,12 +925,17 @@ const pointZhenFa = {
     "劳宫":"直刺0.3~0.5寸。局部胀痛感明显。可透向后溪（劳宫透后溪：清心安神）。手法以捻转泻法为主。注意：手掌皮肤厚韧，进针需稍用力。",
     "大陵":"直刺0.3~0.5寸。局部酸胀，可有麻电感向指尖放射。纳子法泻子时用捻转泻法，泻心包实热。注意：此处有正中神经通过，不宜深刺，不宜强刺激！手法轻柔。",
     "内关":"直刺0.5~1.0寸。局部酸胀，可有麻电感向指尖放射。可透向外关（内关透外关：宽胸理气，治胸痹）。注意：此处有正中神经通过，不宜反复强提插，麻电感过于强烈应退针调整角度。",
+    "间使":"直刺0.5~1.0寸。局部酸胀，可有麻电感向指尖放射。可透向曲泽（间使透曲泽：宽胸宁心）。注意：此处有正中神经通过，不宜深刺强刺激。",
+    "曲泽":"直刺0.8~1.2寸。局部酸胀，可向肘部放射。可点刺放血（曲泽点刺：清热解暑、宁心），或透向尺泽（曲泽透尺泽：调和心胃）。注意：贵要静脉及正中神经附近，不可深刺强提插。",
 
     // === 手少阳三焦经 ===
     "中渚":"直刺0.3~0.5寸。局部酸胀，可向手指放射。可透向少府或液门。纳子法补母时用捻转补法（随而济之），顺经捻转，补益三焦元气；日常疏风清热时用捻转泻法。",
     "阳池":"直刺0.3~0.5寸。局部酸胀。可透向大陵（阳池透大陵：通调三焦与原气）。注意：手腕背侧组织薄，不宜深刺。",
     "外关":"直刺0.5~1.0寸。局部酸胀，可向手指或肘部放射。可透向内关（外关透内关：和解少阳，治偏头痛）。手法捻转泻法。",
     "天井":"直刺0.5~1.0寸。局部酸胀，可向前臂放射。屈肘取穴，于尺骨鹰嘴后上方凹陷处进针。纳子法泻子时用捻转泻法，泻三焦实热。注意：不可深刺伤及肘关节囊。",
+    "液门":"直刺0.3~0.5寸。局部酸胀，可向手背放射。可透向中渚（液门透中渚：清泻少阳风热）。注意：手背组织薄，不宜深刺。",
+    "关冲":"浅刺0.1~0.2寸，或点刺出血。井穴浅刺。急救（中暑、热病昏厥）时三棱针点刺放血3~5滴。",
+    "支沟":"直刺0.5~1.0寸。局部酸胀，可向手背或前臂放射。手法以捻转泻法为主，常用于通便（配照海）。注意：避开尺骨背面，免伤骨膜。",
 
     // === 足少阳胆经 ===
     "窍阴":"浅刺0.1~0.2寸，或点刺出血。井穴浅刺。",
@@ -967,7 +1027,8 @@ function renderNajia(dateVal, curHour) {
         ｜ 合日互用：${heStem}
         ｜ 值日经脉：${stemToMer[dStem]}</p>
         <p class="rule">取穴规则：阳日阳时开穴、阴日阴时开穴（按日干与时辰地支阴阳匹配）；
-        阳日阴时 / 阴日阳时为闭穴，取合日同时辰穴替代（合日互用法）。阳日取阳经五输穴，阴日取阴经五输穴，按井荥输经合顺序流注。</p>
+        阳日阴时 / 阴日阳时为闭穴，取合日同时辰穴替代（合日互用法）。阳日取阳经五输穴，阴日取阴经五输穴，按井荥输经合顺序流注。
+        输原同开：阳经输穴时辰，输穴与原穴同时开取（表中以"／"分隔）；阴经无独立原穴，以输代原。</p>
         <p>🕐 当前时辰：<strong>${curNode.name}时</strong>（${curNode.s}:00 ~ ${curNode.e}:00）</p>`;
 
     const selfPt = najiaPointTable[dStem];
@@ -983,24 +1044,20 @@ function renderNajia(dateVal, curHour) {
 
         let status, point, desc, cls;
         if (openFlag) {
-            const p = selfPt[t.code];
-            const px = getPeiXue(p);
-            const zf = getZhenFa(p);
+            const blk = najiaPointBlock(selfPt[t.code], "open-point");
             status = "✅ 开穴";
-            point  = p;
-            desc   = (pointDesc[p]||"") + (px ? `<br><span style="color:#6a1b9a;">配穴：${px}</span>` : "") + (zf ? `<br><span style="color:#bf360c;">💉 针法：${zf}</span>` : "");
+            point  = blk.point;
+            desc   = blk.desc;
             cls    = "open-point";
         } else {
-            const hp = hePt[t.code];
-            const px = getPeiXue(hp);
-            const zf = getZhenFa(hp);
+            const blk = najiaPointBlock(hePt[t.code], "he-point");
             status = "❌ 闭穴";
-            point  = `合日·${hp}`;
-            desc   = `借${heStem}日同时辰穴 · ${pointDesc[hp]||""}` + (px ? `<br><span style="color:#6a1b9a;">配穴：${px}</span>` : "") + (zf ? `<br><span style="color:#bf360c;">💉 针法：${zf}</span>` : "");
+            point  = `合日·${blk.point}`;
+            desc   = `借${heStem}日同时辰穴<br>${blk.desc}`;
             cls    = "he-point";
         }
 
-        html += `<tr class="${isCur}">
+        html += `<tr class="${isCur}${!openFlag ? ' closed-row' : ''}">
             <td>${t.name}时</td><td>${t.s}:00-${t.e}:00</td>
             <td>${shiGZ}</td><td>${shiYang?"阳":"阴"}</td>
             <td>${stemToMer[dStem]}</td>
@@ -1020,7 +1077,8 @@ function renderNazi(curHour) {
     document.getElementById("infoNazi").innerHTML =
         `<p>📌 纳子法以时辰地支配属十二经络，不随日期变化。</p>
         <p class="rule">取穴原理："虚则补其母，实则泻其子"——根据经络五行生克关系，
-        选取母穴（补法）或子穴（泻法）施治；原穴为脏腑原气输注之处，虚实均可配伍使用。</p>
+        选取母穴（补法）或子穴（泻法）施治；原穴为脏腑原气输注之处，虚实均可配伍使用。
+        阴经（肺/心/心包）原穴即输穴，以输代原，故补母穴与原穴可能为同一穴。</p>
         <p>🕐 当前时辰：<strong>${curNode.name}时</strong>（${curNode.s}:00 ~ ${curNode.e}:00）
         ｜ 当令经络：<strong>${curData.mer}</strong>（${curData.elem}）</p>`;
 
@@ -1123,8 +1181,10 @@ function calcAll() {
     renderPeiXue(curHour);
 }
 
-// 启动
-window.onload = calcAll;
+// 启动：打开页面自动使用当前日期时间
+window.onload = function() {
+    useNow();
+};
 </script>
 </body>
 </html>
